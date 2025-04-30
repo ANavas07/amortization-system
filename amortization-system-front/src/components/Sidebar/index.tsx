@@ -133,7 +133,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }}
                       >
                         <RxDashboard />
-                        Dashboard
+                        Menú Principal
                         <IoIosArrowDown className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'}`} />
                       </NavLink>
                       {/* <!-- Dropdown Menu Start --> */}
@@ -150,7 +150,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && '!text-white')
                               }
                             >
-                              eCommerce
+                              Amortización
                             </NavLink>
                           </li>
                         </ul>
@@ -221,7 +221,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     }`}
                 >
                   <IoBusinessSharp />
-                  Cooperativa
+                  Mi Empresa
                 </NavLink>
               </li>
               {/* <!-- Menu Item Profile --> */}

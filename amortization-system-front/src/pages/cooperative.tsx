@@ -4,7 +4,6 @@ import ChaskiLogo from '../images/chaski-logo/chaskilogoblack.png';
 import { IoCameraOutline } from "react-icons/io5";
 import { cooperativeT } from '../types';
 import React, { useEffect, useState } from 'react';
-import useCooperatives from '../hooks/useCooperatives';
 import { IMAGE_URL } from '../helpers/Constants';
 
 const initialData: cooperativeT = {
@@ -19,10 +18,8 @@ const initialData: cooperativeT = {
 const Profile = () => {
 
   const [cooperativeInputs, setCooperativeInputs] = useState<cooperativeT>(initialData);
-  const { getCooperativeByID } = useCooperatives();
   const [dataFieldChanged, setDataFieldChanged] = useState(false);
   const [btnCancelPressed, setBtnCancelPressed] = useState(false);
-  const { updateCooperative } = useCooperatives();
   //subir imagen
   //blob, imagen en tiempo real
   const [selectedCooperativeImg, setSelectedCooperativeImg] = useState<File | null>(null);
@@ -32,86 +29,12 @@ const Profile = () => {
   const localStorageData = localStorage.getItem('chaski-log');
   const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : ChaskiLogo;
 
-  useEffect(() => {
-    const fetchCooperative = async () => {
-      const storageData = localStorage.getItem('chaski-log');
-      let cooperativeID: string
-      if (storageData) {
-        const data = JSON.parse(storageData);
-        cooperativeID = data.cooperative;
-      }
-
-      const cooperative = await getCooperativeByID(cooperativeID!.toString());
-      setCooperativeInputs(cooperative);
-    };
-    fetchCooperative();
-  }, [btnCancelPressed]);
-
-  //new value
-  const changeLogoValueLocalStorage = async (id: string) => {
-    const cooperative = await getCooperativeByID(id);
-    const localStorageData = localStorage.getItem('chaski-log'); // Leer los datos actuales del localStorage
-    if (!localStorageData) {
-      console.error("No se encontró el item 'chaski-log' en el localStorage.");
-      return;
-    }
-
-    // Parsear los datos existentes
-    const parsedData = JSON.parse(localStorageData);
-
-    // Actualizar solo el valor de logo
-    parsedData.logo = cooperative.logo;
-
-    // Guardar los datos actualizados nuevamente en el localStorage
-    localStorage.setItem('chaski-log', JSON.stringify(parsedData));
-  }
-
-  const handleCancelBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    cleanData();
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCooperativeInputs({
-      ...cooperativeInputs,
-      [e.target.name]: e.target.value
-    })
-    setDataFieldChanged(true);
-  };
-
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedCooperativeImg(file);
-      setPreviewImg(URL.createObjectURL(file)); // Guarda el archivo en el estado
-      setDataFieldChanged(true);
-    };
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (selectedCooperativeImg) {
-      await updateCooperative(cooperativeInputs, selectedCooperativeImg);
-      changeLogoValueLocalStorage(cooperativeInputs.id);
-    } else {
-      await updateCooperative(cooperativeInputs);
-    }
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 5000);
-  };
-
-  const cleanData = () => {
-    setBtnCancelPressed(!btnCancelPressed);
-    setDataFieldChanged(false);
-  };
-
+ 
   return (
     <>
       <Breadcrumb pageName="Profile" />
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <form onSubmit={handleSubmit}>
+        <form >
           <div className="relative z-20 h-35 md:h-65">
             <img
               src={CoverOne}
@@ -134,7 +57,6 @@ const Profile = () => {
                     name="logo"
                     id="logo"
                     className="sr-only"
-                    onChange={handleFiles}
                   />
                 </label>
               </div>
@@ -159,7 +81,6 @@ const Profile = () => {
                         name="cooperativeName"
                         id="cooperativeName"
                         value={cooperativeInputs.name}
-                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -178,7 +99,6 @@ const Profile = () => {
                         name="address"
                         id="address"
                         value={cooperativeInputs.address}
-                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -196,7 +116,6 @@ const Profile = () => {
                         name="phone"
                         id="phone"
                         value={cooperativeInputs.phone}
-                        onChange={handleChange}
 
                       />
                     </div>
@@ -215,7 +134,6 @@ const Profile = () => {
                         name="mail"
                         id="mail"
                         value={cooperativeInputs.email}
-                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -224,7 +142,6 @@ const Profile = () => {
                   <button
                     className={`flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black ${dataFieldChanged ? 'hover:bg-zinc-400' : ''} dark:border-strokedark dark:text-white`}
                     type="button"
-                    onClick={handleCancelBtn}
                     disabled={!dataFieldChanged}
                   >
                     Cancelar

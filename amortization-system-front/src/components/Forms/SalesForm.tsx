@@ -7,7 +7,7 @@ import { useSelectedSeatsStore } from '../../Zustand/useSelectedSeats';
 import { useSellTicket } from '../../hooks/useSellTicket';
 import useSerialStation from '../../hooks/useSerialStation';
 import toast from 'react-hot-toast';
-import ConfirmPopup from '../../modals/confirmPopup.processes';
+import ConfirmPopup from '../../modals/amortizationPopUp';
 import PDFPopup from '../../modals/pdfPopup';
 import { TicketData } from '../../types/ticket';
 import { POPULATION_GROUP } from '../../helpers/Constants';
