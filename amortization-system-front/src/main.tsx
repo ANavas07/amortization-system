@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import './css/style.css';
 import './css/satoshi.css';
-import 'jsvectormap/dist/css/jsvectormap.css';
+// import 'jsvectormap/dist/css/jsvectormap.css'; //No funciona, da problemas con el css de la libreria
 import 'flatpickr/dist/flatpickr.min.css';
 import {AuthContextProvider } from './context/AuthContext';
 

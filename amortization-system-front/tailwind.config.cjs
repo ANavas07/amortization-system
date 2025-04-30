@@ -49,7 +49,7 @@ module.exports = {
         'boxdark-2': '#1A222C',
         strokedark: '#2E3A47',
         'form-strokedark': '#3d4d60',
-        'form-input': '#1d2a39',
+        'form-input': '#1a222c',
         meta: {
           1: '#DC3545',
           2: '#EFF2F7',

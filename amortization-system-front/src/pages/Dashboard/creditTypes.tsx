@@ -1,11 +1,14 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../../context/AuthContext';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import AmortizationPopup from '../../modals/amortizationPopUp';
+import { amortizationT, tableAmortizationDataT } from '../../types';
 
 const CreditTypes: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [opCreditType, setOpCreditType] = useState('');
+  const [amortizationSystem, setAmortizationSystem] = useState<'frances' | 'aleman' | null>(null);
+  const [dataLoan, setDataLoan] = useState<tableAmortizationDataT[]>([]); 
 
   const { authUser } = useAuthContext();
 
@@ -13,32 +16,176 @@ const CreditTypes: React.FC = () => {
     if (!authUser) return;
   }, [authUser]);
 
-  const openModal =()=>{
+  const openModal = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal =()=>{
+  const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleCreditTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setOpCreditType(event.target.value);
+    console.log(event.target.value);
   }
 
+  const creditTypes: string[] = [
+    'Consumo (Personal)',
+    'Vehicular',
+    'Hipotecario (Vivienda)',
+    'Microcrédito',
+    'Quirografario'
+  ];
+
+  const timeOptions: Record<number, string> = {
+    1: 1 * 12 + ' meses',
+    2: 2 * 12 + ' meses',
+    3: 3 * 12 + ' meses',
+    4: 4 * 12 + ' meses',
+    5: 5 * 12 + ' meses',
+    6: 6 * 12 + ' meses',
+    7: 7 * 12 + ' meses',
+    8: 8 * 12 + ' meses',
+    9: 9 * 12 + ' meses',
+    10: 10 * 12 + ' meses',
+    11: 11 * 12 + ' meses',
+    12: 12 * 12 + ' meses',
+    13: 13 * 12 + ' meses',
+    14: 14 * 12 + ' meses',
+    15: 15 * 12 + ' meses',
+    16: 16 * 12 + ' meses',
+    17: 17 * 12 + ' meses',
+    18: 18 * 12 + ' meses',
+    19: 19 * 12 + ' meses',
+    20: 20 * 12 + ' meses',
+  }
+
+  //Logica para obtener la tasa de amortizacion
+  const getAmortizationFrenchRate = (amortizationData: amortizationT) => {
+    const { loanAmount, paymentTime, interestRate } = amortizationData;
+    const i = interestRate / 12;
+    const fee = loanAmount * (i / (1 - Math.pow(1 + i, -paymentTime)));
+    const tablaAmortizationSystem: tableAmortizationDataT[] = [];
+
+    let balance = loanAmount;
+
+    for (let k = 1; k <= paymentTime; k++) {
+      const interest = balance * i;
+      const capital = fee - interest;
+      const newBalance = Math.max(0, balance - capital);
+      const lifeInsurance = 0.01 * balance;
+      const startDate = new Date();
+      tablaAmortizationSystem.push({
+        id: k,
+        paymentDate: new Date(
+          startDate.getFullYear(),
+          startDate.getMonth() + k,
+          startDate.getDate()
+        ).toLocaleDateString(),
+        capital: Number(capital.toFixed(2)),
+        interest: Number(interest.toFixed(2)),
+        fee: Number(fee.toFixed(2)),
+        lifeInsurance: Number(lifeInsurance.toFixed(2)),
+        insurance: 0,
+        balance: Number(newBalance.toFixed(2)),
+      });
+      balance = newBalance;
+    }
+    setDataLoan(tablaAmortizationSystem);
+    return true;
+  }
+
+  const getAmortizationGermanyRate = (amortizationData: amortizationT) => {
+    const { loanAmount, paymentTime, interestRate } = amortizationData;
+    const i = interestRate / 12;
+    const capital = loanAmount / paymentTime;
+    const tablaAmortizationSystem: tableAmortizationDataT[] = [];
+
+    let balance = loanAmount;
+
+    for (let k = 1; k <= paymentTime; k++) {
+      const interest = balance * i;
+      const fee = capital + interest;
+      const newBalance = Math.max(0, balance - capital);
+      const lifeInsurance = 0.01 * balance;
+      const startDate = new Date();
+      tablaAmortizationSystem.push({
+        id: k,
+        paymentDate: new Date(
+          startDate.getFullYear(),
+          startDate.getMonth() + k,
+          startDate.getDate()
+        ).toLocaleDateString(),
+        capital: Number(capital.toFixed(2)),
+        interest: Number(interest.toFixed(2)),
+        fee: Number(fee.toFixed(2)),
+        lifeInsurance: Number(lifeInsurance.toFixed(2)),
+        insurance: 0,
+        balance: Number(newBalance.toFixed(2)),
+      });
+      balance = newBalance;
+    }
+    setDataLoan(tablaAmortizationSystem);
+    return true;
+  }
+
+  const amortizationSystemHandler = (amortizationData: amortizationT) => {
+    if (amortizationSystem === 'frances') {
+      return getAmortizationFrenchRate(amortizationData);
+    } else if (amortizationSystem === 'aleman') {
+      return getAmortizationGermanyRate(amortizationData);
+    } else {
+      console.error('Invalid amortization system selected');
+      return false;
+    }
+  }
+
+  const dataExample: amortizationT = {
+    method: amortizationSystem || '',
+    loanAmount: 10000,
+    priceGoods: 0,
+    paymentTime: 12,
+    interestRate: 0.13,
+  }
 
   return (
     <>
       <Breadcrumb pageName="¿Que tipo de credito necesitas?" />
       <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-center md:items-center lg:gap-12 mt-4 text-black dark:text-white">
-        <select defaultValue="Pick a color" className="select  rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+        <select defaultValue="Pick a color" className="select  rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none
+      dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+          onChange={handleCreditTypeChange}>
           <option disabled>¿Que tipo de credito necesitas?</option>
-          <option>Consumo (Personal)</option>
-          <option>Vehicular</option>
-          <option>Hipotecario (Vivienda)</option>
-          <option>Microcrédito</option>
-          <option>Quirografario </option>
+          {
+            creditTypes.map((type, index) => {
+              return (
+                <option key={index} value={type}>
+                  {type}
+                </option>
+              )
+            })
+          }
         </select>
       </div>
 
       <div className="flex flex-col md:flex-row border-stroke bg-transparent rounded-lg shadow-md max-w-6xl mx-auto mt-8">
         {/* Left Column - Input Form */}
         <div className="w-full md:w-1/2 p-6 border-stroke bg-transparent rounded-l-lg text-black dark:text-white">
+
+          {opCreditType.includes('Hipotecario (Vivienda)') && (
+            <div className="mb-6">
+              <label htmlFor="loanAmount" className="block text-sm font-medium  mb-2">
+                ¿Cual es el costo de la vivienda?
+              </label>
+              <input
+                type="text"
+                id="loanAmount"
+                className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Min. </p>
+            </div>
+          )}
+
           <div className="mb-6">
             <label htmlFor="loanAmount" className="block text-sm font-medium  mb-2">
               ¿Cuánto dinero necesitas que te prestemos?
@@ -51,44 +198,40 @@ const CreditTypes: React.FC = () => {
             <p className="text-xs text-gray-500 mt-1">Min. </p>
           </div>
 
-          <div className ="mb-6">
+          <div className="mb-6 text-black dark:text-white">
             <label htmlFor="loanTerm" className="block text-sm font-medium  mb-2">
               ¿En cuanto tiempo quieres pagarlo?
             </label>
             <div className="relative">
-              <select
-                id="loanTerm"
-                className="w-full p-3 border bg-transparent rounded appearance-none focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="10">10 meses</option>
-                <option value="12">12 meses</option>
-                <option value="18">18 meses</option>
-                <option value="24">24 meses</option>
-                <option value="36">36 meses</option>
+
+              <select defaultValue="Selecciona el tiempo" className="select w-full rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none
+      dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-white">
+                {
+                  Object.entries(timeOptions).map(([Key, value]) => (
+                    <option key={Key} value={Key}>{value}</option>
+                  ))
+                }
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
             </div>
           </div>
 
-          <div className ="mb-6">
+          <div className="mb-6">
             <p className="block text-sm font-medium  mb-2">
               ¿Como quieres pagar tus intereses?
             </p>
             <div className="flex space-x-4">
               <div
-                className={`flex-1 p-4 border rounded cursor-pointer transition-colors`}
-                onClick={() => console.log('hola')}
+                className={`flex-1 p-4 border rounded cursor-pointer transition-shadow duration-200
+                  ${amortizationSystem === 'frances' ? 'shadow-lg ring-2 ring-blue-400' : 'shadow-none'}`}
+                onClick={() => setAmortizationSystem('frances')}
               >
                 <p className="font-medium mb-1">Método Francés</p>
                 <p className="text-xs">Cuotas se mantienen fijas en el tiempo</p>
               </div>
               <div
-                className={`flex-1 p-4 border rounded cursor-pointer transition-colors`}
-                onClick={() => console.log('hola')}
+                className={`flex-1 p-4 border rounded cursor-pointer transition-shadow duration-200
+                  ${amortizationSystem === 'aleman' ? 'shadow-lg ring-2 ring-blue-400' : 'shadow-none'}`}
+                onClick={() => setAmortizationSystem('aleman')}
               >
                 <p className="font-medium mb-1">Método Alemán</p>
                 <p className="text-xs">Cuotas variables que decrecen en el tiempo</p>
@@ -97,7 +240,8 @@ const CreditTypes: React.FC = () => {
           </div>
 
           <button
-            className ="w-full py-3 bg-transparent/10 font-medium border rounded hover:bg-transparent/20 transition-colors"
+            className="w-full py-3 bg-transparent/10 font-medium border rounded hover:bg-transparent/20 transition-colors"
+            onClick={() => amortizationSystemHandler(dataExample)}
           >
             Simular
           </button>
@@ -124,7 +268,7 @@ const CreditTypes: React.FC = () => {
             </div>
           </div>
 
-          <div className ="text-center mb-4">
+          <div className="text-center mb-4">
             <p className="text-4xl font-bold "></p>
             <p className="text-sm mt-2">Durante <span className="font-medium"> meses</span></p>
             <p className="text-sm">Con una tasa de interés referencial <span className="font-medium">13%</span></p>
@@ -157,19 +301,20 @@ const CreditTypes: React.FC = () => {
             *Valores referenciales, no son considerados como una oferta formal de préstamo. La oferta definitiva está sujeta al cumplimiento de las condiciones y políticas referentes a capacidad de pago.
           </p>
 
-          <button className="text-blue-600 hover:text-blue-800 text-center"
-          onClick={()=> openModal()}>
+          <button className="text-blue-600 hover:text-blue-800 text-center mb-100"
+            onClick={() => openModal()}>
             Ver tabla de amortización
           </button>
-          <AmortizationPopup
-            title="Tabla de Amortización"
+            <AmortizationPopup
+            title={`Tabla de amortización ${amortizationSystem}`}
             isOpen={isModalOpen}
             onClose={closeModal}
-          >
-          </AmortizationPopup>
+            loanData={dataLoan}
+            >
+            </AmortizationPopup>
 
         </div>
-      </div>
+      </div >
 
     </>
   );
