@@ -122,13 +122,18 @@ const CreditTypes: React.FC = () => {
     const tablaAmortizationSystem: tableAmortizationDataT[] = [];
 
     let balance = loanAmount;
-
+    let sumCapital = 0;
+    let sumInterest = 0;
+    let sumSeguro = 0;
     for (let k = 1; k <= paymentTime; k++) {
       const interest = balance * i;
       const fee = capital + interest;
       const newBalance = Math.max(0, balance - capital);
       const lifeInsurance = 0.01 * balance;
       const startDate = new Date();
+      sumCapital += capital;
+      sumInterest += interest;
+      sumSeguro += lifeInsurance;
       tablaAmortizationSystem.push({
         id: k,
         paymentDate: new Date(
@@ -144,6 +149,10 @@ const CreditTypes: React.FC = () => {
         balance: Number(newBalance.toFixed(2)),
       });
       balance = newBalance;
+      setTotalCapital(Number(sumCapital.toFixed(2)));
+      setTotalInteres(Number(sumInterest.toFixed(2)));
+      setTotalSeguro(Number(sumSeguro.toFixed(2)));
+      setTotalPagar(Number((sumCapital + sumInterest + sumSeguro).toFixed(2)));
     }
     setDataLoan(tablaAmortizationSystem);
     return true;
