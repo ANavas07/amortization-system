@@ -28,6 +28,10 @@ const CreditTypes: React.FC = () => {
     setOpCreditType(event.target.value);
     console.log(event.target.value);
   }
+  const [loanAmount, setLoanAmount] = useState<number>(0);
+  const [priceGoods, setPriceGoods] = useState<number>(0);
+  const [paymentTime, setPaymentTime] = useState<number>(12); // valor por defecto
+  const [paymentTimeText, setPaymentTimeText] = useState<string>('');
 
   const creditTypes: string[] = [
     'Consumo (Personal)',
@@ -38,27 +42,28 @@ const CreditTypes: React.FC = () => {
   ];
 
   const timeOptions: Record<number, string> = {
-    1: 1 * 12 + ' meses',
-    2: 2 * 12 + ' meses',
-    3: 3 * 12 + ' meses',
-    4: 4 * 12 + ' meses',
-    5: 5 * 12 + ' meses',
-    6: 6 * 12 + ' meses',
-    7: 7 * 12 + ' meses',
-    8: 8 * 12 + ' meses',
-    9: 9 * 12 + ' meses',
-    10: 10 * 12 + ' meses',
-    11: 11 * 12 + ' meses',
-    12: 12 * 12 + ' meses',
-    13: 13 * 12 + ' meses',
-    14: 14 * 12 + ' meses',
-    15: 15 * 12 + ' meses',
-    16: 16 * 12 + ' meses',
-    17: 17 * 12 + ' meses',
-    18: 18 * 12 + ' meses',
-    19: 19 * 12 + ' meses',
-    20: 20 * 12 + ' meses',
-  }
+    12: '1 año (12 meses)',
+    24: '2 años (24 meses)',
+    36: '3 años (36 meses)',
+    48: '4 años (48 meses)',
+    60: '5 años (60 meses)',
+    72: '6 años (72 meses)',
+    84: '7 años (84 meses)',
+    96: '8 años (96 meses)',
+    108: '9 años (108 meses)',
+    120: '10 años (120 meses)',
+    132: '11 años (132 meses)',
+    144: '12 años (144 meses)',
+    156: '13 años (156 meses)',
+    168: '14 años (168 meses)',
+    180: '15 años (180 meses)',
+    192: '16 años (192 meses)',
+    204: '17 años (204 meses)',
+    216: '18 años (216 meses)',
+    228: '19 años (228 meses)',
+    240: '20 años (240 meses)',
+  };
+  
 
   //Logica para obtener la tasa de amortizacion
   const getAmortizationFrenchRate = (amortizationData: amortizationT) => {
@@ -140,13 +145,7 @@ const CreditTypes: React.FC = () => {
     }
   }
 
-  const dataExample: amortizationT = {
-    method: amortizationSystem || '',
-    loanAmount: 10000,
-    priceGoods: 0,
-    paymentTime: 12,
-    interestRate: 0.13,
-  }
+
 
   return (
     <>
@@ -178,9 +177,10 @@ const CreditTypes: React.FC = () => {
                 ¿Cual es el costo de la vivienda?
               </label>
               <input
-                type="text"
-                id="loanAmount"
+                type="number"
+                id="priceGoods"
                 className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setPriceGoods(Number(e.target.value))}
               />
               <p className="text-xs text-gray-500 mt-1">Min. </p>
             </div>
@@ -190,11 +190,12 @@ const CreditTypes: React.FC = () => {
             <label htmlFor="loanAmount" className="block text-sm font-medium  mb-2">
               ¿Cuánto dinero necesitas que te prestemos?
             </label>
-            <input
-              type="text"
-              id="loanAmount"
-              className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
-            />
+              <input
+                type="number"
+                id="loanAmount"
+                className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setLoanAmount(Number(e.target.value))}
+              />
             <p className="text-xs text-gray-500 mt-1">Min. </p>
           </div>
 
@@ -204,14 +205,23 @@ const CreditTypes: React.FC = () => {
             </label>
             <div className="relative">
 
-              <select defaultValue="Selecciona el tiempo" className="select w-full rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none
-      dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-white">
+              <select
+                defaultValue=""
+                onChange={(e) => {
+                  setPaymentTime(Number(e.target.value));
+                  setPaymentTimeText(e.target.options[e.target.selectedIndex].text);
+                }}
+                className="select w-full rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none
+                  dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-white"
+              >
+                <option value="" disabled>Selecciona el tiempo</option>
                 {
-                  Object.entries(timeOptions).map(([Key, value]) => (
-                    <option key={Key} value={Key}>{value}</option>
+                  Object.entries(timeOptions).map(([key, value]) => (
+                    <option key={key} value={key}>{value}</option>
                   ))
                 }
               </select>
+
             </div>
           </div>
 
@@ -241,7 +251,15 @@ const CreditTypes: React.FC = () => {
 
           <button
             className="w-full py-3 bg-transparent/10 font-medium border rounded hover:bg-transparent/20 transition-colors"
-            onClick={() => amortizationSystemHandler(dataExample)}
+            onClick={() =>
+              amortizationSystemHandler({
+                method: amortizationSystem || '',
+                loanAmount,
+                priceGoods,
+                paymentTime,
+                interestRate: 0.13 // o podrías hacerlo variable también
+              })
+            }
           >
             Simular
           </button>
