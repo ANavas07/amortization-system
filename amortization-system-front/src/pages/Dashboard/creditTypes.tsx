@@ -36,7 +36,9 @@ const CreditTypes: React.FC = () => {
   const [totalInteres, setTotalInteres] = useState<number>(0);
   const [totalSeguro, setTotalSeguro] = useState<number>(0);
   const [totalPagar, setTotalPagar] = useState<number>(0);
-  
+  const [primeraCuota, setPrimeraCuota] = useState<tableAmortizationDataT | null>(null);
+
+
   const creditTypes: string[] = [
     'Consumo (Personal)',
     'Vehicular',
@@ -111,6 +113,9 @@ const CreditTypes: React.FC = () => {
       setTotalSeguro(Number(sumSeguro.toFixed(2)));
       setTotalPagar(Number((sumCapital + sumInterest + sumSeguro).toFixed(2)));
     }
+    setPrimeraCuota(tablaAmortizationSystem[0]);
+
+
     setDataLoan(tablaAmortizationSystem);
     return true;
   }
@@ -154,6 +159,9 @@ const CreditTypes: React.FC = () => {
       setTotalSeguro(Number(sumSeguro.toFixed(2)));
       setTotalPagar(Number((sumCapital + sumInterest + sumSeguro).toFixed(2)));
     }
+    setPrimeraCuota(tablaAmortizationSystem[0]);
+
+
     setDataLoan(tablaAmortizationSystem);
     return true;
   }
@@ -293,22 +301,30 @@ const CreditTypes: React.FC = () => {
         <div className="w-full md:w-1/2 p-6 flex flex-col">
           <h2 className="text-lg font-medium text-center mb-6">Tus pagos mensuales serán</h2>
 
-          <div className="flex justify-center items-center space-x-2 mb-8 text-black dark:text-white">
-            <div className="text-center">
-              <p className="text-lg font-semibold"> </p>
-              <p className="text-xs">Capital</p>
+            <div className="flex justify-center items-center space-x-2 mb-8 text-black dark:text-white">
+              <div className="text-center">
+                <p className="text-lg font-semibold">
+                  {primeraCuota ? primeraCuota.capital.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
+                </p>
+                <p className="text-xs">Capital</p>
+              </div>
+              <div className="text-2xl font-light text-gray-400">+</div>
+              <div className="text-center">
+                <p className="text-lg font-semibold">
+                  {primeraCuota ? primeraCuota.interest.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
+                </p>
+                <p className="text-xs">Interés</p>
+              </div>
+              <div className="text-2xl font-light text-gray-400">+</div>
+              <div className="text-center">
+                <p className="text-lg font-semibold">
+                  {primeraCuota ? primeraCuota.lifeInsurance.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
+                </p>
+                <p className="text-xs">Seguro</p>
+              </div>
             </div>
-            <div className="text-2xl font-light text-gray-400">+</div>
-            <div className="text-center">
-              <p className="text-lg font-semibold"></p>
-              <p className="text-xs">Interés</p>
-            </div>
-            <div className="text-2xl font-light text-gray-400">+</div>
-            <div className="text-center">
-              <p className="text-lg font-semibold"></p>
-              <p className="text-xs">Seguro</p>
-            </div>
-          </div>
+
+
 
           <div className="text-center mb-4">
             <p className="text-4xl font-bold "></p>
