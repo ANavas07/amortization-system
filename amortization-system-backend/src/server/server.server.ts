@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from '../routes/auth.routes';
 import usersRoute from '../routes/users.routes';
+import configRoute from '../routes/sysConfi.routes';
 
 //Documentacion de la API
 import swaggerUi from 'swagger-ui-express';
@@ -40,6 +41,7 @@ export default class Server {
         const prefixUrl = '/devChickenBros'
         this.app.use(`${prefixUrl}/auth`, authRoutes);
         this.app.use(`${prefixUrl}/users`, usersRoute);
+        this.app.use(`${prefixUrl}/config`, configRoute);
 
         //Ruta para la documentación de la API
         this.app.use(`${prefixUrl}/docs`, swaggerUi.serve, swaggerUi.setup(openapiSpecification)); 

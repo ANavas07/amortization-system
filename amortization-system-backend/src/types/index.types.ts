@@ -9,7 +9,6 @@ export type ValidateRoleAndRouteId = {
     arrival_station_id: number
 }
 
-
 export type UserLoginT = Pick<Users, 'userName' | 'email' | 'password'>;
 
 export type UserT = InferAttributes<Users>;

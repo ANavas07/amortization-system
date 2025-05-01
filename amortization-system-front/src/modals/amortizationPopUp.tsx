@@ -1,9 +1,8 @@
-import { ReactNode, useRef } from 'react';
+import { useRef } from 'react';
 import { ReactTabulator } from 'react-tabulator';
 import 'react-tabulator/lib/styles.css';          // estilos por defecto
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import { tableAmortizationDataT } from '../types';
-
 
 interface AmortizationPopupProps {
     title: string;
@@ -56,17 +55,8 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
     return (
 
         <dialog open className="modal modal-middle z-[10000]">
-            <div
-                className="
-                        modal-box
-                        w-4/5         /* 80% ancho */
-                        h-4/5         /* 80% alto */
-                        max-w-none    /* anula el max-width de DaisyUI */
-                        p-6
-                        overflow-auto /* scroll si el contenido sobra */
-                        rounded-sm border border-stroke bg-white dark:border-strokedark dark:bg-boxdark
-                        "
-            >
+            <div className="modal-box w-4/5 h-4/5 max-w-none p-6 overflow-auto
+                        rounded-sm border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
                 <h3 className="font-bold text-lg text-black dark:text-white mb-4">
                     {title}
                 </h3>
