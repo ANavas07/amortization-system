@@ -1,8 +1,9 @@
 import { Router } from "express";
 import protectRoute from "../middleware/protectRoute.middleware";
-import { getConfigSystem } from "../controllers/sysConfi.controllers";
+import { getConfigSystem, updateConfigSystem } from "../controllers/sysConfi.controllers";
 
 const router = Router();
 router.get('/',getConfigSystem);
+router.post('/updateConfig', updateConfigSystem);
 
 export default router;

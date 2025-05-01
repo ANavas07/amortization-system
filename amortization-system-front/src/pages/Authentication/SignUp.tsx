@@ -4,7 +4,7 @@ import ChaskiLogoW from '../../images/chaski-logo/chaskilogowhite.svg';
 import ChaskiLogoB from '../../images/chaski-logo/chaskilogoblack.svg';
 import { FaRegUser } from 'react-icons/fa';
 import { FaIdCard, FaUserTie } from 'react-icons/fa'; // Nuevos íconos para los campos adicionales
-import { CreateUserT } from '../../types';
+import { CreateUserT } from '../../types/';
 import createUser from '../../hooks/userCreation';
 import { useState } from 'react';
 import { MdEmail } from 'react-icons/md';

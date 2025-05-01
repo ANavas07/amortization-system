@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from '../routes/auth.routes';
 import usersRoute from '../routes/users.routes';
 import configRoute from '../routes/sysConfi.routes';
+import bankRoute from '../routes/bank.routes';
 
 //Documentacion de la API
 import swaggerUi from 'swagger-ui-express';
@@ -17,6 +18,7 @@ import {
 
 } from '../models/tableAssociations.models';
 import openapiSpecification from '../swaggerDocumentation/swagger.swaggerDocumentation';
+import Banks from '../models/Banks';
 
 export default class Server {
     private app: express.Application;
@@ -42,7 +44,7 @@ export default class Server {
         this.app.use(`${prefixUrl}/auth`, authRoutes);
         this.app.use(`${prefixUrl}/users`, usersRoute);
         this.app.use(`${prefixUrl}/config`, configRoute);
-
+        this.app.use(`${prefixUrl}/bank`, bankRoute);
         //Ruta para la documentación de la API
         this.app.use(`${prefixUrl}/docs`, swaggerUi.serve, swaggerUi.setup(openapiSpecification)); 
     };
@@ -79,7 +81,8 @@ export default class Server {
                 // { alter: true } is used to update the database schema
                 await Admin.sync(),
                 await Roles.sync(),      
-                await Users.sync(),               
+                await Users.sync(),          
+                await Banks.sync(),     
             console.log("Database connected successfully");
         } catch (error) {
             console.log("Unable to connect to the db: " + error);

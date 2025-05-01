@@ -2,8 +2,8 @@
     "consumo": {
         "interes": 0.02,
         "seguro": 0.01,
-        "montoMinimo": 1000,
-        "montoMaximo": 10000
+        "montoMinimo": 5000,
+        "montoMaximo": 20000
     },
     "vehicular": {
         "interes": 0.02,

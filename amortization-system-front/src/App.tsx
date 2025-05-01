@@ -6,14 +6,14 @@ import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import CreditTypes from './pages/Dashboard/creditTypes';
-import Profile from './pages/cooperative';
+import Profile from './pages/banks';
 import Settings from './pages/Settings';
 import DefaultLayout from './layout/DefaultLayout';
 import RoutesRegistration from './pages/Dashboard/routes.processes';
 import { Toaster } from 'react-hot-toast';
 import { useAuthContext } from './context/AuthContext';
 import ProtectedRoute from './utils/protectedRoute.utils';
-import { authInterceptor } from './hooks/useInterceptor';
+// import { authInterceptor } from './hooks/useInterceptor';
 
 
 function App() {

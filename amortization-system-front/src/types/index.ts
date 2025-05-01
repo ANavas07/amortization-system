@@ -14,7 +14,7 @@ export type UserT = {
 
 export type UserSignUpT = Pick<UserT, 'email' | 'user_name' | 'password'>;
 
-
+export type CreateUserT = Omit<UserT, 'password'>;
 export type UserLocalStorageT = Pick<UserT, 'full_name' | 'role_id' | 'cooperative_id'>;
 
 export type amortizationT = {
@@ -34,6 +34,15 @@ export type tableAmortizationDataT={
     insurance: number,
     fee: number,
     balance: number,
+}
+
+export type bankT = {
+    name: string,
+    address: string,
+    phone: string,
+    email: string,
+    slogan: string,
+    logo?: string,
 }
 
 

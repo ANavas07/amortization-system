@@ -1,3 +1,4 @@
+import { isUtf8 } from 'buffer';
 import fs from 'fs';
 import path from 'path';
 
@@ -16,11 +17,18 @@ export const getConfigSystemService = async () => {
     }
 }
 
-export const updateConfigSystemService = async (data: any) => {
-    try{
-        
+export const updateConfigSystemService = async (dataConfiguration:Record<string, any>) => {
+    try {
+        const text = await fs.promises.readFile(CONFIGPATH, 'utf-8');
+        const updatedConfig = JSON.parse(text);
+        const newConfig = { ...updatedConfig, ...dataConfiguration };
+        await fs.promises.writeFile(CONFIGPATH, JSON.stringify(newConfig, null, 2), 'utf-8');
+        return {
+            status: 200,
+            msg: 'Configuration updated successfully'
+        };
 
-    }catch (error) {
+    } catch (error) {
         return {
             status: 500,
             msg: error

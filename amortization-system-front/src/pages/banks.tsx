@@ -2,22 +2,22 @@ import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import CoverOne from '../images/cover/cover-01.png';
 import ChaskiLogo from '../images/chaski-logo/chaskilogoblack.png';
 import { IoCameraOutline } from "react-icons/io5";
-import { cooperativeT } from '../types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IMAGE_URL } from '../helpers/Constants';
+import { bankT } from '../types';
 
-const initialData: cooperativeT = {
-  id: "",
+const initialData: bankT = {
   name: '',
   address: '',
   phone: '',
   email: '',
+  slogan: '',
   logo: '',
 };
 
 const Profile = () => {
 
-  const [cooperativeInputs, setCooperativeInputs] = useState<cooperativeT>(initialData);
+  const [bankInputs, setbankInputs] = useState<bankT>(initialData);
   const [dataFieldChanged, setDataFieldChanged] = useState(false);
   const [btnCancelPressed, setBtnCancelPressed] = useState(false);
   //subir imagen
@@ -29,12 +29,77 @@ const Profile = () => {
   const localStorageData = localStorage.getItem('chaski-log');
   const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : ChaskiLogo;
 
- 
+  const changeLogoValueLocalStorage = async () => {
+    const localStorageData = localStorage.getItem('chaski-log'); // Leer los datos actuales del localStorage
+    if (!localStorageData) {
+      console.error("No se encontró el item 'chaski-log' en el localStorage.");
+      return;
+    }
+
+    // Parsear los datos existentes
+    const parsedData = JSON.parse(localStorageData);
+
+    // Actualizar solo el valor de logo
+    parsedData.logo = 'cooperative.logo';
+    // parsedData.logo = cooperative.logo;
+
+    // Guardar los datos actualizados nuevamente en el localStorage
+    localStorage.setItem('chaski-log', JSON.stringify(parsedData));
+  };
+
+  const handleCancelBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    cleanData();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setbankInputs({
+      ...bankInputs,
+      [e.target.name]: e.target.value
+    })
+    setDataFieldChanged(true);
+  };
+
+  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedCooperativeImg(file);
+      setPreviewImg(URL.createObjectURL(file)); // Guarda el archivo en el estado
+      setDataFieldChanged(true);
+    };
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (selectedCooperativeImg) {
+      // await updateCooperative(bankInputs, selectedCooperativeImg);
+      // changeLogoValueLocalStorage(bankInputs.id);
+    } else {
+      // await updateCooperative(bankInputs);
+    }
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
+  };
+
+  const cleanData = () => {
+    setbankInputs(initialData);
+    setBtnCancelPressed(!btnCancelPressed);
+    setDataFieldChanged(false);
+  };
+
+  useEffect(() => {
+    if (btnCancelPressed) {
+      cleanData();
+    }
+  }, [btnCancelPressed]);
+  
   return (
     <>
       <Breadcrumb pageName="Profile" />
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <form >
+        <form onSubmit={handleSubmit}>
           <div className="relative z-20 h-35 md:h-65">
             <img
               src={CoverOne}
@@ -57,30 +122,32 @@ const Profile = () => {
                     name="logo"
                     id="logo"
                     className="sr-only"
+                    onChange={handleFiles}
                   />
                 </label>
               </div>
             </div>
             <div className="mt-4">
               <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-                {cooperativeInputs.name}
+                {bankInputs.name || 'Banco DevChickenBros'}
               </h3>
               <div className="w-full pt-4">
                 <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row ">
                   <div className="w-full sm:w-[50%]">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white text-left"
-                      htmlFor="cooperativeName"
+                      htmlFor="name"
                     >
-                      Cooperativa
+                      Banco
                     </label>
                     <div className="relative">
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-1 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="cooperativeName"
-                        id="cooperativeName"
-                        value={cooperativeInputs.name}
+                        name="name"
+                        id="name"
+                        value={bankInputs.name}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -98,7 +165,8 @@ const Profile = () => {
                         type="text"
                         name="address"
                         id="address"
-                        value={cooperativeInputs.address}
+                        value={bankInputs.address}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -115,15 +183,15 @@ const Profile = () => {
                         type="text"
                         name="phone"
                         id="phone"
-                        value={cooperativeInputs.phone}
-
+                        value={bankInputs.phone}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
                   <div className="w-full sm:w-[50%]">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white text-left"
-                      htmlFor="mail"
+                      htmlFor="email"
                     >
                       email
                     </label>
@@ -131,17 +199,40 @@ const Profile = () => {
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-1 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="mail"
-                        id="mail"
-                        value={cooperativeInputs.email}
+                        name="email"
+                        id="email"
+                        value={bankInputs.email}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
                 </div>
+                {/* Slogan */}
+                <div className="w-full sm:w-[75%] mx-auto mb-10">
+                  <label
+                    className="mb-3 block text-sm font-medium text-black dark:text-white text-left"
+                    htmlFor="email"
+                  >
+                    Slogan
+                  </label>
+                  <div className="relative">
+                    <textarea
+                      className="w-full rounded border border-stroke bg-gray py-3 pl-1 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      name="slogan"
+                      id="slogan"
+                      value={bankInputs.slogan}
+                      rows={4}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                {/* Slogan */}
+
                 <div className="flex justify-center gap-4.5">
                   <button
                     className={`flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black ${dataFieldChanged ? 'hover:bg-zinc-400' : ''} dark:border-strokedark dark:text-white`}
                     type="button"
+                    onClick={handleCancelBtn}
                     disabled={!dataFieldChanged}
                   >
                     Cancelar

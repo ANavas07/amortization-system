@@ -9,6 +9,7 @@ import { handleSequelizeError } from "../utils/helpers.utils";
 import Roles from "../models/roles.models";
 import { RoleEnum } from "../utils/enums.utils";
 import { Admin } from "../models/administrators.models";
+import Banks from "../models/Banks";
 
 // Servicio para iniciar sesión
 export const loginUserService = async (
@@ -30,6 +31,10 @@ export const loginUserService = async (
                 json: { error: HandleMessages.INVALID_CREDENTIALS }
             };
         }
+
+        const logoRoute = await Banks.findOne({
+            attributes: ["logo"],
+        })
         // Generar token y establecer cookie
         generateTokenAndSetCookie(user.dni, res);
 
@@ -39,6 +44,7 @@ export const loginUserService = async (
                 full_name: user.name + " " + user.lastName,
                 dni: user.dni,
                 role: user.roleID,
+                logo: logoRoute?.logo,
             }
         };
     } catch (error) {
