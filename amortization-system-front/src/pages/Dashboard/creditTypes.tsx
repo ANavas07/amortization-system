@@ -32,7 +32,11 @@ const CreditTypes: React.FC = () => {
   const [priceGoods, setPriceGoods] = useState<number>(0);
   const [paymentTime, setPaymentTime] = useState<number>(12); // valor por defecto
   const [paymentTimeText, setPaymentTimeText] = useState<string>('');
-
+  const [totalCapital, setTotalCapital] = useState<number>(0);
+  const [totalInteres, setTotalInteres] = useState<number>(0);
+  const [totalSeguro, setTotalSeguro] = useState<number>(0);
+  const [totalPagar, setTotalPagar] = useState<number>(0);
+  
   const creditTypes: string[] = [
     'Consumo (Personal)',
     'Vehicular',
@@ -73,13 +77,20 @@ const CreditTypes: React.FC = () => {
     const tablaAmortizationSystem: tableAmortizationDataT[] = [];
 
     let balance = loanAmount;
+    let sumCapital = 0;
+    let sumInterest = 0;
+    let sumSeguro = 0;
 
     for (let k = 1; k <= paymentTime; k++) {
+      
       const interest = balance * i;
       const capital = fee - interest;
       const newBalance = Math.max(0, balance - capital);
       const lifeInsurance = 0.01 * balance;
       const startDate = new Date();
+      sumCapital += capital;
+      sumInterest += interest;
+      sumSeguro += lifeInsurance;
       tablaAmortizationSystem.push({
         id: k,
         paymentDate: new Date(
@@ -95,6 +106,10 @@ const CreditTypes: React.FC = () => {
         balance: Number(newBalance.toFixed(2)),
       });
       balance = newBalance;
+      setTotalCapital(Number(sumCapital.toFixed(2)));
+      setTotalInteres(Number(sumInterest.toFixed(2)));
+      setTotalSeguro(Number(sumSeguro.toFixed(2)));
+      setTotalPagar(Number((sumCapital + sumInterest + sumSeguro).toFixed(2)));
     }
     setDataLoan(tablaAmortizationSystem);
     return true;
@@ -295,24 +310,23 @@ const CreditTypes: React.FC = () => {
           <div className="bg-transparent rounded-lg p-4 mb-4 border border-stroke">
             <h3 className="text-lg font-medium mb-4 text-center">Detalle de tu crédito</h3>
 
-            <div className="space-y-2">
               <div className="flex justify-between">
-                <p>Capital:</p>
-                <p className="font-medium"></p>
+  <p>Capital:</p>
+  <p className="font-medium">{totalCapital.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
               </div>
               <div className="flex justify-between">
                 <p>Total de interés:</p>
-                <p className="font-medium"> </p>
+                <p className="font-medium">{totalInteres.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
               </div>
               <div className="flex justify-between">
                 <p>Total seguro de desgravamen:</p>
-                <p className="font-medium"> </p>
+                <p className="font-medium">{totalSeguro.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
               </div>
               <div className="border-t pt-2 mt-2  flex justify-between">
                 <p className="font-medium">Total a pagar:</p>
-                <p className="font-bold "></p>
+                <p className="font-bold">{totalPagar.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
               </div>
-            </div>
+
           </div>
 
           <p className="text-xs text-gray-500 text-center mb-6">
