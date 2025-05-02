@@ -45,7 +45,7 @@ function App() {
               element={
                 authUser ? <Navigate to='/' /> :
                   <>
-                    <PageTitle title="Signin | ChaskiPass" />
+                    <PageTitle title="Signin | DevChickenBros" />
                     <SignIn />
                   </>
               }
@@ -61,7 +61,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={['admin', 'clerk']}>
                   <>
-                    <PageTitle title="CreditTypes Dashboard | ChaskiPass" />
+                    <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
                     <CreditTypes />
                   </>
                 </ProtectedRoute>
@@ -72,7 +72,7 @@ function App() {
               element={
                 <ProtectedRoute>
                   <>
-                    <PageTitle title="Cooperativa | ChaskiPass" />
+                    <PageTitle title="Cooperativa | DevChickenBros" />
                     <Profile />
                   </>
                 </ProtectedRoute>
@@ -83,7 +83,7 @@ function App() {
               element={
                 <ProtectedRoute>
                   <>
-                    <PageTitle title="Settings | ChaskiPass" />
+                    <PageTitle title="Settings | DevChickenBros" />
                     <Settings />
                   </>
                 </ProtectedRoute>
@@ -94,7 +94,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={['admin']}>
                   <>
-                    <PageTitle title="Signin | ChaskiPass" />
+                    <PageTitle title="Signin | DevChickenBros" />
                     <SignUp />
                   </>
                 </ProtectedRoute>
@@ -106,7 +106,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={['admin', 'clerk']}>
                   <>
-                    <PageTitle title="Routes | ChaskiPass" />
+                    <PageTitle title="Routes | DevChickenBros" />
                     <RoutesRegistration />
                   </>
                 </ProtectedRoute>

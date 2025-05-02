@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 //my imports
-import ChaskiLogoW from '../../images/chaski-logo/chaskilogowhite.svg';
-import ChaskiLogoB from '../../images/chaski-logo/chaskilogoblack.svg';
+import BrandLogoWhite from '../../images/brand-logo/brandwhite.svg';
+import BrandLogoBlack from '../../images/brand-logo/brandblack.svg';
 import { UserSignUpT } from '../../types';
 import useSignup from '../../hooks/useSignup';
 import { CiMail } from "react-icons/ci";
@@ -42,8 +42,8 @@ const SignIn: React.FC = () => {
           <div className="flex flex-wrap items-center">
             <div className="hidden w-full xl:block xl:w-1/2">
               <div className="py-10 px-12 text-center">
-                <img className='dark:hidden' src={ChaskiLogoB} alt="Logo" />
-                <img className='hidden dark:block' src={ChaskiLogoW} alt="Logo" />
+                <img className='dark:hidden' src={BrandLogoBlack} alt="Logo" />
+                <img className='hidden dark:block' src={BrandLogoWhite} alt="Logo" />
               </div>
             </div>
 
@@ -51,7 +51,7 @@ const SignIn: React.FC = () => {
               <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
                 <span className="mb-1.5 block font-medium">Ingreso</span>
                 <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                  ChaskiPass
+                  DevChickenBros
                 </h2>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">

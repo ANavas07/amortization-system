@@ -16,11 +16,11 @@ export const sendEmail = async (to: string, mailMessage: string,) => {
     try {
         const info = await transporter.sendMail({
             from: {
-                name: 'ChaskiPass',
+                name: 'DevChickenBros',
                 address: process.env.EMAIL_USER || 'default@example.com'
             },
             to: to,
-            subject: 'Bienvenido a ChaskiPass',
+            subject: 'Bienvenido a DevChickenBros',
             html: mailMessage
         });
         return { success: true, info: info };

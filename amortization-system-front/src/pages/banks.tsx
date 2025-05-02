@@ -1,6 +1,6 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import CoverOne from '../images/cover/cover-01.png';
-import ChaskiLogo from '../images/chaski-logo/chaskilogoblack.png';
+import BrandLogo from '../images/brand-logo/brandlogoblack.png';
 import { IoCameraOutline } from "react-icons/io5";
 import { useEffect, useState } from 'react';
 import { IMAGE_URL } from '../helpers/Constants';
@@ -31,7 +31,7 @@ const Profile = () => {
 
   //Recuperar la imagen de la empresa.
   const localStorageData = localStorage.getItem('chaski-log');
-  const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : ChaskiLogo;
+  const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : BrandLogo;
 
   useEffect(()=>{
     const fetchBankData = async ()=>{
