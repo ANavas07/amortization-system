@@ -5,6 +5,8 @@ import { IoCameraOutline } from "react-icons/io5";
 import { useEffect, useState } from 'react';
 import { IMAGE_URL } from '../helpers/Constants';
 import { bankT } from '../types';
+import { FaRegMap } from 'react-icons/fa';
+import useBank from '../hooks/useBank';
 
 const initialData: bankT = {
   name: '',
@@ -20,14 +22,26 @@ const Profile = () => {
   const [bankInputs, setbankInputs] = useState<bankT>(initialData);
   const [dataFieldChanged, setDataFieldChanged] = useState(false);
   const [btnCancelPressed, setBtnCancelPressed] = useState(false);
+  const [bankData, setBankData] = useState<bankT | null>(null);
+  const {getBanks, updateBank} = useBank();
   //subir imagen
   //blob, imagen en tiempo real
-  const [selectedCooperativeImg, setSelectedCooperativeImg] = useState<File | null>(null);
+  const [selectedBankImg, setSelectedBankImg] = useState<File | null>(null);
   const [previewImg, setPreviewImg] = useState<string | null>(null);
 
   //Recuperar la imagen de la empresa.
   const localStorageData = localStorage.getItem('chaski-log');
   const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : ChaskiLogo;
+
+  useEffect(()=>{
+    const fetchBankData = async ()=>{
+      const bankData = await getBanks();
+      setbankInputs(bankData.data.msg[0]);
+      setBankData(bankData.data.msg[0]);
+    }
+
+    fetchBankData();
+  }, [btnCancelPressed]);
 
   const changeLogoValueLocalStorage = async () => {
     const localStorageData = localStorage.getItem('chaski-log'); // Leer los datos actuales del localStorage
@@ -38,11 +52,8 @@ const Profile = () => {
 
     // Parsear los datos existentes
     const parsedData = JSON.parse(localStorageData);
-
     // Actualizar solo el valor de logo
-    parsedData.logo = 'cooperative.logo';
-    // parsedData.logo = cooperative.logo;
-
+    parsedData.logo = bankData?.logo;
     // Guardar los datos actualizados nuevamente en el localStorage
     localStorage.setItem('chaski-log', JSON.stringify(parsedData));
   };
@@ -63,7 +74,7 @@ const Profile = () => {
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedCooperativeImg(file);
+      setSelectedBankImg(file);
       setPreviewImg(URL.createObjectURL(file)); // Guarda el archivo en el estado
       setDataFieldChanged(true);
     };
@@ -71,11 +82,11 @@ const Profile = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (selectedCooperativeImg) {
-      // await updateCooperative(bankInputs, selectedCooperativeImg);
-      // changeLogoValueLocalStorage(bankInputs.id);
+    if (selectedBankImg) {
+      await updateBank(bankInputs, selectedBankImg);
+      changeLogoValueLocalStorage();
     } else {
-      // await updateCooperative(bankInputs);
+      await updateBank(bankInputs);
     }
 
     setTimeout(() => {

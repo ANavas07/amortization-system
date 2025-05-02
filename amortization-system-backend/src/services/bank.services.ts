@@ -2,9 +2,9 @@ import Banks from "../models/Banks";
 import { handleSequelizeError } from "../utils/helpers.utils";
 
 export const getBanksService = async () => {
-    try{
+    try {
         const bank = await Banks.findAll();
-        if(!bank){
+        if (!bank) {
             return {
                 status: 404,
                 msg: "No hay bancos registrados"
@@ -14,25 +14,43 @@ export const getBanksService = async () => {
             status: 200,
             msg: bank
         }
-    }catch(error){
+    } catch (error) {
         return handleSequelizeError(error);
     }
 };
 
 export const updateBankService = async (changes: Partial<Banks>) => {
-    try{
+    try {
         const bank = await Banks.findOne({
             where: {
                 name: changes.name,
             }
         });
-        if(!bank){
-            return {msg: "No existe el banco"};
-        }
-        await bank.update(changes);
-        return {msg: "Banco actualizado correctamente"};
+        if (!bank) {
+            return { msg: "No existe el banco" };
+        };
 
-    }catch(error){
+        console.log(
+            changes.name,
+            changes.address,
+            changes.phone,
+            changes.email,
+            changes.logo,
+            changes.slogan
+        );
+
+        await bank.update(
+            {
+                name: changes.name,
+                address: changes.address,
+                phone: changes.phone,
+                email: changes.email,
+                logo: changes.logo,
+                slogan: changes.slogan
+            }
+        );
+        return;
+    } catch (error) {
         return handleSequelizeError(error);
     }
 };

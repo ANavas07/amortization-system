@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 
 export default function useBank() {
     const [loading, setLoading] = useState(false);
-    const [dataBank, setDataBank] = useState<bankT>();
     
     const getBanks = async () => {
         setLoading(true);
@@ -28,20 +27,28 @@ export default function useBank() {
         }
     };
 
-    const updateBank = async (changes: Partial<bankT>) => {
+    const updateBank = async (changes: bankT, imageFile?:File) => {
         setLoading(true);
         try {
+            const formData =  new FormData();
+            if(imageFile){
+                formData.append('logo', imageFile);
+            };
+            //Agregar los demas campos de cooperativeData a FormData
+            Object.entries(changes).forEach(([key, value]) => {
+                formData.append(key, value as string);
+            });
             const res: Response = await fetch(`${API_BASE_URL}bank/modBank`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify(changes),
+                body: formData,
             });
             const data = await res.json();
-            if (!res.ok) {
+            console.log(data);
+            if(data.error || res.status !== 200){
                 throw new Error(data.error);
-            }
-            return data;
+            };
+            toast.success(data.msg);
         } catch (error) {
             toast.error(verifyError(error));
         } finally {
@@ -50,6 +57,6 @@ export default function useBank() {
     }
 
     
-    return { getBanks, loading, dataBank, updateBank };
+    return { getBanks, loading, updateBank };
 
 }

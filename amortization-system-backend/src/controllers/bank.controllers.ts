@@ -1,5 +1,7 @@
 import {Request, Response} from 'express';
 import { getBanksService, updateBankService } from '../services/bank.services';
+import { uploadAndReplaceToHostinger } from '../utils/uploadImagesFtp';
+import path from 'path';
 
 export const getBanks = async (req: Request, res: Response) => {
     try {
@@ -18,9 +20,14 @@ export const getBanks = async (req: Request, res: Response) => {
 export const updateBank = async (req: Request, res: Response) => {
     try {
         const changes = req.body;
+        let remoteFileName = '';
+        if(req.file){
+            remoteFileName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(req.file.originalname)}`;
+            await uploadAndReplaceToHostinger(req.file.buffer, remoteFileName, changes.logo);
+        };
         const data = await updateBankService(changes);
-        res.status(201).json({
-            msg: data
+        res.status(200).json({
+            msg: "Banco actualizado correctamente",
         });
         return;
     } catch (error) {
