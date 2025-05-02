@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import ChaskiLogo from '../../images/chaski-logo/chaskilogowhite.svg';
+import BrandLogo from '../../images/brand-logo/brandwhite.svg';
 import { IoIosArrowDown } from "react-icons/io";
 import { IoSettingsOutline, IoBusinessSharp } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
@@ -27,7 +27,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   //Recuperar la imagen de la empresa.
   const localStorageData = localStorage.getItem('chaski-log');
-  const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : ChaskiLogo;
+  const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : BrandLogo;
 
   // close on click outside
   useEffect(() => {

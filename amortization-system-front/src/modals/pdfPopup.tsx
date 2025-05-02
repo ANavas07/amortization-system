@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
-import ChaskiLogoB from '../images/chaski-logo/chaskilogoblack.png';
+import BrandLogoBlack from '../images/brand-logo/brandlogoblack.png';
 import { TicketData } from '../types/ticket';
 
 Modal.setAppElement('#root');
@@ -48,7 +48,7 @@ const PDFPopup: React.FC<PdfModalProps> = ({ tickets }) => {
         };
 
         const lineHeight = 4;
-        doc.addImage(ChaskiLogoB, 'PNG', 15, 0, 50, 40);
+        doc.addImage(BrandLogoBlack, 'PNG', 15, 0, 50, 40);
         let currentY = 25;
         currentY += lineHeight * 3;
         addCenteredText('Av. Cevallos y Quito', currentY, 8);
@@ -101,7 +101,7 @@ const PDFPopup: React.FC<PdfModalProps> = ({ tickets }) => {
         currentY += lineHeight;
         addCenteredText('Conserve este boleto para cualquier reclamo posterior.', currentY, 6);
         currentY += lineHeight;
-        addCenteredText('Gracias por viajar con ChaskiPass', currentY, 6);
+        addCenteredText('Gracias por viajar con DevChickenBros', currentY, 6);
     };
 
     const closeModal = () => {
