@@ -19,7 +19,6 @@ export const updateConfigSystemService = async (dataConfiguration:Record<string,
     try {
         const text = await fs.promises.readFile(CONFIGPATH, 'utf-8');
         const updatedConfig = JSON.parse(text);
-        console.log('dataConfiguration', dataConfiguration);
         const newConfig = { ...updatedConfig, ...dataConfiguration };
         await fs.promises.writeFile(CONFIGPATH, JSON.stringify(newConfig, null, 2), 'utf-8');
         return {

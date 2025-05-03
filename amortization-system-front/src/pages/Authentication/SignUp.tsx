@@ -12,16 +12,15 @@ import { validateEcuadorianDNI } from '../../utils/userValidator.utils';
 import toast from 'react-hot-toast';
 
 const initialStateSignUp: CreateUserT = {
-  full_name: '',
+  fullName: '',
   dni: '',
   name: '',
-  last_name: '',
-  user_name: '',
+  lastName: '',
+  userName: '',
   email: '',
   phone: '',
   address: '',
-  role_id: '',
-  cooperative_id: '',
+  roleID: '',
 };
 
 const SignUp: React.FC = () => {
@@ -123,8 +122,8 @@ const SignUp: React.FC = () => {
                         type="text"
                         maxLength={20}
                         placeholder="Ingrese su apellido"
-                        id="last_name"
-                        value={inputSignUp.last_name}
+                        id="lastName"
+                        value={inputSignUp.lastName}
                         onChange={handleChange}
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
@@ -144,8 +143,8 @@ const SignUp: React.FC = () => {
                         type="text"
                         placeholder="Usuario"
                         maxLength={20}
-                        id="user_name"
-                        value={inputSignUp.user_name}
+                        id="userName"
+                        value={inputSignUp.userName}
                         onChange={handleChange}
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
@@ -227,8 +226,8 @@ const SignUp: React.FC = () => {
                   <select
                     className="w-full rounded border border-stroke bg-gray py-3 pl-4.5 pr-11.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary appearance-none"
                     name="role"
-                    id="role_id"
-                    value={inputSignUp.role_id}
+                    id="roleID"
+                    value={inputSignUp.roleID}
                     onChange={handleChange}
                     disabled
                   >

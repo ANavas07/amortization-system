@@ -10,7 +10,7 @@ import { FaLock } from "react-icons/fa";
 
 const initialStateLogin: UserSignUpT = {
   email: '',
-  user_name: '',
+  userName: '',
   password: ''
 }
 
@@ -82,8 +82,8 @@ const SignIn: React.FC = () => {
                       <input
                         type="text"
                         placeholder="Nombre de usuario"
-                        id='user_name'
-                        value={inputLogin.user_name}
+                        id='userName'
+                        value={inputLogin.userName}
                         onChange={handleChange}
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />

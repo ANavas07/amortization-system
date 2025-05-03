@@ -4,6 +4,6 @@ import { getConfigSystem, updateConfigSystem } from "../controllers/sysConfi.con
 
 const router = Router();
 router.get('/',getConfigSystem);
-router.post('/updateConfig', updateConfigSystem);
+router.put('/updateConfig', updateConfigSystem);
 
 export default router;

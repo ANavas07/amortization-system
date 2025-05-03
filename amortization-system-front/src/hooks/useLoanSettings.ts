@@ -28,12 +28,15 @@ export default function useLoanSettings() {
 
     const updateLoanSettings = async (changes: any) => {
         setLoading(true);
+        console.log("changes", changes);
         try {
-            console.log("changes", changes);
             const res: Response = await fetch(`${API_BASE_URL}config/updateConfig`, {
                 method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 credentials: "include",
-                body:JSON.stringify(changes),
+                body: JSON.stringify(changes),
             });
             const data = await res.json();
             if (!res.ok) {
@@ -41,6 +44,7 @@ export default function useLoanSettings() {
             }
             toast.success(data.msg);
         } catch (error) {
+            console.log("error", error);
             toast.error(verifyError(error));
         } finally {
             setLoading(false);

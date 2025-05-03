@@ -1,32 +1,42 @@
 {
-    "consumo": {
-        "interest": 0.02,
-        "insurance": 0.01,
-        "minAmount": 5000,
-        "maxAmount": 20000
-    },
-    "vehicular": {
-        "interest": 0.02,
-        "insurance": 0.01,
-        "minAmount": 1000,
-        "maxAmount": 10000
-    },
-    "hipotecario": {
-        "interest": 0.02,
-        "insurance": 0.01,
-        "minAmount": 1000,
-        "maxAmount": 10000
-    },
-    "microcredito": {
-        "interest": 0.02,
-        "insurance": 0.01,
-        "minAmount": 1000,
-        "maxAmount": 10000
-    },
-    "quirografario": {
-        "interest": 0.02,
-        "insurance": 0.01,
-        "minAmount": 1000,
-        "maxAmount": 10000
-    }
+  "consumo": {
+    "interest": 0.05,
+    "insurance": 0.01,
+    "minAmount": 4000,
+    "maxAmount": 10000,
+    "maxCostGoods": 0,
+    "minCostGoods": 0
+  },
+  "vehicular": {
+    "interest": 0.02,
+    "insurance": 0.01,
+    "minAmount": 1000,
+    "maxAmount": 10000,
+    "maxCostGoods": 0,
+    "minCostGoods": 0
+  },
+  "hipotecario": {
+    "interest": 0.02,
+    "insurance": 0.01,
+    "minAmount": 999,
+    "maxAmount": 300000,
+    "maxCostGoods": 100000,
+    "minCostGoods": 30000
+  },
+  "microcredito": {
+    "interest": 0.02,
+    "insurance": 0.01,
+    "minAmount": 1000,
+    "maxAmount": 10000,
+    "maxCostGoods": 0,
+    "minCostGoods": 0
+  },
+  "quirografario": {
+    "interest": 0.033,
+    "insurance": 0.022,
+    "minAmount": 3600,
+    "maxAmount": 8001,
+    "maxCostGoods": 100000,
+    "minCostGoods": 50000
+  }
 }

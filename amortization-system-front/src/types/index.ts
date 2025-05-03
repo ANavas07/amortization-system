@@ -1,21 +1,20 @@
 export type UserT = {
     dni: string,
     name: string,
-    last_name: string,
-    full_name: string,
-    user_name: string,
+    lastName: string,
+    fullName: string,
+    userName: string,
     email: string,
     phone: string,
     address: string,
     password: string,
-    role_id: string
-    cooperative_id: string
+    roleID: string
 };
 
-export type UserSignUpT = Pick<UserT, 'email' | 'user_name' | 'password'>;
+export type UserSignUpT = Pick<UserT, 'email' | 'userName' | 'password'>;
 
 export type CreateUserT = Omit<UserT, 'password'>;
-export type UserLocalStorageT = Pick<UserT, 'full_name' | 'role_id' | 'cooperative_id'>;
+export type UserLocalStorageT = Pick<UserT, 'fullName' | 'roleID'>;
 
 export type amortizationT = {
     method:string,
@@ -50,8 +49,9 @@ export type loanSettingsT = {
         insurance: number;
         minAmount: number;
         maxAmount: number;
+        maxCostGoods: number;
+        minCostGoods: number;
 }
-
 
 
 

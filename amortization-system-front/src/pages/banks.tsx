@@ -36,8 +36,8 @@ const Profile = () => {
   useEffect(()=>{
     const fetchBankData = async ()=>{
       const bankData = await getBanks();
-      setbankInputs(bankData.data.msg[0]);
-      setBankData(bankData.data.msg[0]);
+      setbankInputs(bankData.msg[0]);
+      setBankData(bankData.msg[0]);
     }
 
     fetchBankData();
@@ -157,7 +157,7 @@ const Profile = () => {
                         type="text"
                         name="name"
                         id="name"
-                        value={bankInputs.name}
+                        value={bankInputs.name ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -176,7 +176,7 @@ const Profile = () => {
                         type="text"
                         name="address"
                         id="address"
-                        value={bankInputs.address}
+                        value={bankInputs.address ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -194,7 +194,7 @@ const Profile = () => {
                         type="text"
                         name="phone"
                         id="phone"
-                        value={bankInputs.phone}
+                        value={bankInputs.phone ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -212,7 +212,7 @@ const Profile = () => {
                         type="text"
                         name="email"
                         id="email"
-                        value={bankInputs.email}
+                        value={bankInputs.email ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -231,7 +231,7 @@ const Profile = () => {
                       className="w-full rounded border border-stroke bg-gray py-3 pl-1 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       name="slogan"
                       id="slogan"
-                      value={bankInputs.slogan}
+                      value={bankInputs.slogan ?? ''}
                       rows={4}
                       onChange={handleChange}
                     />

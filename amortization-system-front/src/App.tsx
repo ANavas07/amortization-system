@@ -13,7 +13,7 @@ import LoanSettings from './pages/loansSettings';
 import { Toaster } from 'react-hot-toast';
 import { useAuthContext } from './context/AuthContext';
 import ProtectedRoute from './utils/protectedRoute.utils';
-// import { authInterceptor } from './hooks/useInterceptor';
+import { authInterceptor } from './hooks/useInterceptor';
 
 
 function App() {
@@ -31,7 +31,6 @@ function App() {
 
   // Condición para determinar si aplicar o no DefaultLayout
   const isAuthRoute = pathname === '/auth/signin';
-  // const isAuthRoute = false;
 
   return loading ? (
     <Loader />
@@ -59,7 +58,7 @@ function App() {
             <Route
               path='/'
               element={
-                <ProtectedRoute requiredRole={['admin', 'clerk']}>
+                <ProtectedRoute requiredRole={['A', 'S']}>
                   <>
                     <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
                     <CreditTypes />
@@ -92,7 +91,7 @@ function App() {
             <Route
               path="/auth/signup"
               element={
-                <ProtectedRoute requiredRole={['admin']}>
+                <ProtectedRoute requiredRole={['A']}>
                   <>
                     <PageTitle title="Signin | DevChickenBros" />
                     <SignUp />
@@ -103,7 +102,7 @@ function App() {
             <Route
               path="/auth/loanSettings"
               element={
-                <ProtectedRoute requiredRole={['admin']}>
+                <ProtectedRoute requiredRole={['A']}>
                   <>
                     <PageTitle title="Signin | DevChickenBros" />
                     <LoanSettings />
@@ -119,5 +118,5 @@ function App() {
   );
 }
 
-export default App;
-// export default authInterceptor(App);
+// export default App;
+export default authInterceptor(App);

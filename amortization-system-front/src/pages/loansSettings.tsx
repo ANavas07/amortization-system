@@ -2,7 +2,6 @@ import { RiNumbersLine } from "react-icons/ri";
 import { AiOutlineNumber } from "react-icons/ai";
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import useBank from "../hooks/useBank";
 import useLoanSettings from "../hooks/useLoanSettings";
 import { loanSettingsT } from "../types";
 
@@ -11,6 +10,8 @@ const loanSettings: loanSettingsT = {
     insurance: 0,
     minAmount: 0,
     maxAmount: 0,
+    maxCostGoods: 0,
+    minCostGoods: 0,
 }
 
 const LoanSettings: React.FC = () => {
@@ -36,9 +37,10 @@ const LoanSettings: React.FC = () => {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     ) => {
+        const {id, value} = e.target;
         setInputloanSettings({
             ...inputloanSettings,
-            [e.target.id]: e.target.value,
+            [id]: value === '' ? 0 : parseFloat(value),
         });
     };
 
@@ -49,12 +51,10 @@ const LoanSettings: React.FC = () => {
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // const { interest, insurance, minAmount, maxAmount } = inputloanSettings;
         const updateLoanSettingsData = {
             [selectedKeyLoanSettings]: inputloanSettings,
         };
-
-        const response = await updateLoanSettings(updateLoanSettingsData);
+        await updateLoanSettings(updateLoanSettingsData);
     };
 
     return (
@@ -140,7 +140,6 @@ const LoanSettings: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Username */}
                         <div className="mb-4">
                             <label className="mb-2.5 block font-medium text-black dark:text-white">
                                 Monto maximo
@@ -152,6 +151,48 @@ const LoanSettings: React.FC = () => {
                                     maxLength={20}
                                     id="maxAmount"
                                     value={inputloanSettings.maxAmount}
+                                    onChange={handleChange}
+                                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                                />
+                                <span className="absolute right-4 top-4">
+                                    <AiOutlineNumber className="w-[22px] h-[22px]" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                        <div className="mb-4">
+                            <label className="mb-2.5 block font-medium text-black dark:text-white">
+                                Monto minimo de los bienes
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="100000"
+                                    maxLength={20}
+                                    id="maxCostGoods"
+                                    value={inputloanSettings.minCostGoods}
+                                    onChange={handleChange}
+                                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                                />
+                                <span className="absolute right-4 top-4">
+                                    <AiOutlineNumber className="w-[22px] h-[22px]" />
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="mb-2.5 block font-medium text-black dark:text-white">
+                                Monto maximo de los bienes
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="100000"
+                                    maxLength={20}
+                                    id="maxCostGoods"
+                                    value={inputloanSettings.maxCostGoods}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />

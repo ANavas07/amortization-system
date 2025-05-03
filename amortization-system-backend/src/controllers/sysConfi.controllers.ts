@@ -2,6 +2,14 @@ import { Request, Response } from 'express';
 import { RequestBody } from 'swagger-jsdoc';
 import { getConfigSystemService, updateConfigSystemService } from '../services/sysConfi.services';
 
+interface LoanSettingsT {
+    interest: number;
+    insurance: number;
+    minAmount: number;
+    maxAmount: number;
+};
+
+
 export const getConfigSystem = async (req: Request, res: Response) => {
     try {
         const data = await getConfigSystemService();
@@ -17,8 +25,9 @@ export const getConfigSystem = async (req: Request, res: Response) => {
 
 export const updateConfigSystem = async (req: Request, res: Response) => {
     try {
-        // const changes = req.body as Partial<Record<string, number>>;
-        const changes = req.body as any;
+        // const changes = req.body as Partial<Record<string, LoanSettingsT>>;
+        const changes = req.body;
+        console.log('changes', changes);
         const validKeys = [
             "consumo",
             "vehicular",
@@ -36,6 +45,7 @@ export const updateConfigSystem = async (req: Request, res: Response) => {
                 return;
             };
         }
+
         const data = await updateConfigSystemService(changes);
         res.status(200).json({
             status: 200,

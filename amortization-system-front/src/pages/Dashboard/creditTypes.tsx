@@ -2,18 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../../context/AuthContext';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import AmortizationPopup from '../../modals/amortizationPopUp';
-import { amortizationT, tableAmortizationDataT } from '../../types';
+import { amortizationT, loanSettingsT, tableAmortizationDataT } from '../../types';
+import useLoanSettings from '../../hooks/useLoanSettings';
+import toast from 'react-hot-toast';
 
 const CreditTypes: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [opCreditType, setOpCreditType] = useState('');
   const [amortizationSystem, setAmortizationSystem] = useState<'frances' | 'aleman' | null>(null);
-  const [dataLoan, setDataLoan] = useState<tableAmortizationDataT[]>([]); 
+  const [dataLoan, setDataLoan] = useState<tableAmortizationDataT[]>([]);
+  //Para manejo del interes
+  const [selectedLoanSettings, setSelectedLoanSettings] = useState<Record<string, any>>({});
+  const { getLoanSettings } = useLoanSettings();
+  const [loanControlSettings, setLoanControlSettings] = useState<loanSettingsT>({
+    interest: 0,
+    minAmount: 0,
+    maxAmount: 0,
+    insurance: 0,
+    maxCostGoods: 0,
+    minCostGoods: 0,
+  });
+  const [error, setError] = useState<string>('');
+  const [errorG, setErrorG] = useState<string>('');
 
   const { authUser } = useAuthContext();
 
   useEffect(() => {
     if (!authUser) return;
+
+    const loadSettings = async () => {
+      const loanSettingsData = await getLoanSettings();
+      setSelectedLoanSettings(loanSettingsData.data);
+    }
+
+    loadSettings();
   }, [authUser]);
 
   const openModal = () => {
@@ -26,8 +48,9 @@ const CreditTypes: React.FC = () => {
 
   const handleCreditTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setOpCreditType(event.target.value);
+    selectedLoanSettings[event.target.value] && setLoanControlSettings(selectedLoanSettings[event.target.value]);
   };
-  
+
   const [loanAmount, setLoanAmount] = useState<number>(0);
   const [priceGoods, setPriceGoods] = useState<number>(0);
   const [paymentTime, setPaymentTime] = useState<number>(12); // valor por defecto
@@ -38,14 +61,13 @@ const CreditTypes: React.FC = () => {
   const [totalPagar, setTotalPagar] = useState<number>(0);
   const [primeraCuota, setPrimeraCuota] = useState<tableAmortizationDataT | null>(null);
 
-
-  const creditTypes: string[] = [
-    'Consumo (Personal)',
-    'Vehicular',
-    'Hipotecario (Vivienda)',
-    'Microcrédito',
-    'Quirografario'
-  ];
+  const creditTypes: Object = {
+    'consumo': 'Consumo (Personal)',
+    'vehicular': 'Vehicular',
+    'hipotecario': 'Hipotecario (Vivienda)',
+    'microcredito': 'Microcrédito',
+    'quirografario': 'Quirografario'
+  };
 
   const timeOptions: Record<number, string> = {
     12: '1 año (12 meses)',
@@ -69,7 +91,7 @@ const CreditTypes: React.FC = () => {
     228: '19 años (228 meses)',
     240: '20 años (240 meses)',
   };
-  
+
 
   //Logica para obtener la tasa de amortizacion
   const getAmortizationFrenchRate = (amortizationData: amortizationT) => {
@@ -84,7 +106,7 @@ const CreditTypes: React.FC = () => {
     let sumSeguro = 0;
 
     for (let k = 1; k <= paymentTime; k++) {
-      
+
       const interest = balance * i;
       const capital = fee - interest;
       const newBalance = Math.max(0, balance - capital);
@@ -167,34 +189,72 @@ const CreditTypes: React.FC = () => {
   }
 
   const amortizationSystemHandler = (amortizationData: amortizationT) => {
+    inpControls(amortizationData);
     if (amortizationSystem === 'frances') {
       return getAmortizationFrenchRate(amortizationData);
     } else if (amortizationSystem === 'aleman') {
       return getAmortizationGermanyRate(amortizationData);
     } else {
-      console.error('Invalid amortization system selected');
+      toast.error('Por favor, selecciona un sistema de amortización válido.');
       return false;
     }
   }
 
+  const inpControls= (amortizationData:amortizationT) =>{
+    if(error || errorG) {
+      toast.error('Por favor, corrige los errores antes de continuar.');
+      return false;
+    }
+    const calculatedPrice = (amortizationData.priceGoods || 0) *0.8; 
+    if(opCreditType.includes('hipotecario')){
+      if(loanAmount > calculatedPrice){
+        toast.error('El monto máximo a prestar es el 80% del costo de la vivienda.');
+        return false;
+      }else{
+        return true;
+      }
+    }
+  }
+
+  const handleLoanAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setLoanAmount(value);
+    if (value < loanControlSettings.minAmount) {
+      setError(`El monto mínimo es ${loanControlSettings.minAmount}`);
+    } else if (value > loanControlSettings.maxAmount) {
+      setError(`El monto máximo es ${loanControlSettings.maxAmount}`);
+    } else {
+      setError('');
+    }
+  }
+
+  const handleCostGoodsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setLoanAmount(value);
+    if (value < loanControlSettings.minCostGoods) {
+      setErrorG(`El monto mínimo es ${loanControlSettings.minCostGoods}`);
+    } else if (value > loanControlSettings.maxCostGoods) {
+      setErrorG(`El monto máximo es ${loanControlSettings.maxCostGoods}`);
+    } else {
+      setErrorG('');
+    }
+  }
 
 
   return (
     <>
       <Breadcrumb pageName="¿Que tipo de credito necesitas?" />
       <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-center md:items-center lg:gap-12 mt-4 text-black dark:text-white">
-        <select defaultValue="Pick a color" className="select  rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none
+        <select defaultValue="¿Que tipo de credito necesitas?" className="select  rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none
       dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
           onChange={handleCreditTypeChange}>
           <option disabled>¿Que tipo de credito necesitas?</option>
           {
-            creditTypes.map((type, index) => {
-              return (
-                <option key={index} value={type}>
-                  {type}
-                </option>
-              )
-            })
+            Object.entries(creditTypes)?.map(([key, value]: any) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))
           }
         </select>
       </div>
@@ -203,7 +263,7 @@ const CreditTypes: React.FC = () => {
         {/* Left Column - Input Form */}
         <div className="w-full md:w-1/2 p-6 border-stroke bg-transparent rounded-l-lg text-black dark:text-white">
 
-          {opCreditType.includes('Hipotecario (Vivienda)') && (
+          {opCreditType.includes('hipotecario') && (
             <div className="mb-6">
               <label htmlFor="loanAmount" className="block text-sm font-medium  mb-2">
                 ¿Cual es el costo de la vivienda?
@@ -212,9 +272,15 @@ const CreditTypes: React.FC = () => {
                 type="number"
                 id="priceGoods"
                 className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setPriceGoods(Number(e.target.value))}
+                onChange={handleCostGoodsChange}
               />
-              <p className="text-xs text-gray-500 mt-1">Min. </p>
+              <p className="text-xs text-gray-500 mt-1">Min. {loanControlSettings.minCostGoods}</p>
+              <p className="text-xs text-gray-500 mt-1">Max. {loanControlSettings.maxCostGoods}</p>
+              {errorG && (
+              <p className="text-red-500 text-sm mt-1">
+                ⚠ {errorG}
+              </p>
+            )}
             </div>
           )}
 
@@ -222,13 +288,19 @@ const CreditTypes: React.FC = () => {
             <label htmlFor="loanAmount" className="block text-sm font-medium  mb-2">
               ¿Cuánto dinero necesitas que te prestemos?
             </label>
-              <input
-                type="number"
-                id="loanAmount"
-                className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setLoanAmount(Number(e.target.value))}
-              />
-            <p className="text-xs text-gray-500 mt-1">Min. </p>
+            <input
+              type="number"
+              id="loanAmount"
+              className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
+              onChange={handleLoanAmountChange}
+            />
+            <p className="text-xs text-gray-500 mt-1">Min. {loanControlSettings.minAmount}</p>
+            <p className="text-xs text-gray-500 mt-1">Max. {loanControlSettings.maxAmount}</p>
+            {error && (
+              <p className="text-red-500 text-sm mt-1">
+                ⚠ {error}
+              </p>
+            )}
           </div>
 
           <div className="mb-6 text-black dark:text-white">
@@ -289,7 +361,7 @@ const CreditTypes: React.FC = () => {
                 loanAmount,
                 priceGoods,
                 paymentTime,
-                interestRate: 0.13 // o podrías hacerlo variable también
+                interestRate: loanControlSettings.interest // o podrías hacerlo variable también
               })
             }
           >
@@ -301,56 +373,54 @@ const CreditTypes: React.FC = () => {
         <div className="w-full md:w-1/2 p-6 flex flex-col">
           <h2 className="text-lg font-medium text-center mb-6">Tus pagos mensuales serán</h2>
 
-            <div className="flex justify-center items-center space-x-2 mb-8 text-black dark:text-white">
-              <div className="text-center">
-                <p className="text-lg font-semibold">
-                  {primeraCuota ? primeraCuota.capital.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
-                </p>
-                <p className="text-xs">Capital</p>
-              </div>
-              <div className="text-2xl font-light text-gray-400">+</div>
-              <div className="text-center">
-                <p className="text-lg font-semibold">
-                  {primeraCuota ? primeraCuota.interest.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
-                </p>
-                <p className="text-xs">Interés</p>
-              </div>
-              <div className="text-2xl font-light text-gray-400">+</div>
-              <div className="text-center">
-                <p className="text-lg font-semibold">
-                  {primeraCuota ? primeraCuota.lifeInsurance.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
-                </p>
-                <p className="text-xs">Seguro</p>
-              </div>
+          <div className="flex justify-center items-center space-x-2 mb-8 text-black dark:text-white">
+            <div className="text-center">
+              <p className="text-lg font-semibold">
+                {primeraCuota ? primeraCuota.capital.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
+              </p>
+              <p className="text-xs">Capital</p>
             </div>
-
-
+            <div className="text-2xl font-light text-gray-400">+</div>
+            <div className="text-center">
+              <p className="text-lg font-semibold">
+                {primeraCuota ? primeraCuota.interest.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
+              </p>
+              <p className="text-xs">Interés</p>
+            </div>
+            <div className="text-2xl font-light text-gray-400">+</div>
+            <div className="text-center">
+              <p className="text-lg font-semibold">
+                {primeraCuota ? primeraCuota.lifeInsurance.toLocaleString('es-EC', { style: 'currency', currency: 'USD' }) : '—'}
+              </p>
+              <p className="text-xs">Seguro</p>
+            </div>
+          </div>
 
           <div className="text-center mb-4">
             <p className="text-4xl font-bold "></p>
-            <p className="text-sm mt-2">Durante <span className="font-medium"> meses</span></p>
-            <p className="text-sm">Con una tasa de interés referencial <span className="font-medium">13%</span></p>
+            <p className="text-sm mt-2">Durante <span className="font-medium">{paymentTimeText}</span></p>
+            <p className="text-sm">Con una tasa de interés referencial <span className="font-medium">{(loanControlSettings.interest * 100).toFixed(2)}%</span></p>
           </div>
 
           <div className="bg-transparent rounded-lg p-4 mb-4 border border-stroke">
             <h3 className="text-lg font-medium mb-4 text-center">Detalle de tu crédito</h3>
 
-              <div className="flex justify-between">
-  <p>Capital:</p>
-  <p className="font-medium">{totalCapital.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
-              </div>
-              <div className="flex justify-between">
-                <p>Total de interés:</p>
-                <p className="font-medium">{totalInteres.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
-              </div>
-              <div className="flex justify-between">
-                <p>Total seguro de desgravamen:</p>
-                <p className="font-medium">{totalSeguro.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
-              </div>
-              <div className="border-t pt-2 mt-2  flex justify-between">
-                <p className="font-medium">Total a pagar:</p>
-                <p className="font-bold">{totalPagar.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
-              </div>
+            <div className="flex justify-between">
+              <p>Capital:</p>
+              <p className="font-medium">{totalCapital.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
+            </div>
+            <div className="flex justify-between">
+              <p>Total de interés:</p>
+              <p className="font-medium">{totalInteres.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
+            </div>
+            <div className="flex justify-between">
+              <p>Total seguro de desgravamen:</p>
+              <p className="font-medium">{totalSeguro.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
+            </div>
+            <div className="border-t pt-2 mt-2  flex justify-between">
+              <p className="font-medium">Total a pagar:</p>
+              <p className="font-bold">{totalPagar.toLocaleString('es-EC', { style: 'currency', currency: 'USD' })}</p>
+            </div>
 
           </div>
 
@@ -362,13 +432,13 @@ const CreditTypes: React.FC = () => {
             onClick={() => openModal()}>
             Ver tabla de amortización
           </button>
-            <AmortizationPopup
+          <AmortizationPopup
             title={`Tabla de amortización ${amortizationSystem}`}
             isOpen={isModalOpen}
             onClose={closeModal}
             loanData={dataLoan}
-            >
-            </AmortizationPopup>
+          >
+          </AmortizationPopup>
 
         </div>
       </div >

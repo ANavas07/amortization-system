@@ -6,8 +6,6 @@ import { HandleMessages } from "../error/handleMessages.error";
 import { Response } from "express";
 import { SaasAdminLoginT, UserLoginT } from "../types/index.types";
 import { handleSequelizeError } from "../utils/helpers.utils";
-import Roles from "../models/roles.models";
-import { RoleEnum } from "../utils/enums.utils";
 import { Admin } from "../models/administrators.models";
 import Banks from "../models/Banks";
 
@@ -41,7 +39,7 @@ export const loginUserService = async (
         return {
             status: 200,
             json: {
-                full_name: user.name + " " + user.lastName,
+                fullName: user.name + " " + user.lastName,
                 dni: user.dni,
                 role: user.roleID,
                 logo: logoRoute?.logo,
