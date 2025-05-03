@@ -1,32 +1,32 @@
 {
     "consumo": {
-        "interes": 0.02,
-        "seguro": 0.01,
-        "montoMinimo": 5000,
-        "montoMaximo": 20000
+        "interest": 0.02,
+        "insurance": 0.01,
+        "minAmount": 5000,
+        "maxAmount": 20000
     },
     "vehicular": {
-        "interes": 0.02,
-        "seguro": 0.01,
-        "montoMinimo": 1000,
-        "montoMaximo": 10000
+        "interest": 0.02,
+        "insurance": 0.01,
+        "minAmount": 1000,
+        "maxAmount": 10000
     },
     "hipotecario": {
-        "interes": 0.02,
-        "seguro": 0.01,
-        "montoMinimo": 1000,
-        "montoMaximo": 10000
+        "interest": 0.02,
+        "insurance": 0.01,
+        "minAmount": 1000,
+        "maxAmount": 10000
     },
     "microcredito": {
-        "interes": 0.02,
-        "seguro": 0.01,
-        "montoMinimo": 1000,
-        "montoMaximo": 10000
+        "interest": 0.02,
+        "insurance": 0.01,
+        "minAmount": 1000,
+        "maxAmount": 10000
     },
     "quirografario": {
-        "interes": 0.02,
-        "seguro": 0.01,
-        "montoMinimo": 1000,
-        "montoMaximo": 10000
+        "interest": 0.02,
+        "insurance": 0.01,
+        "minAmount": 1000,
+        "maxAmount": 10000
     }
 }

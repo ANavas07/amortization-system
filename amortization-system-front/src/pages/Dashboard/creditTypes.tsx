@@ -26,8 +26,8 @@ const CreditTypes: React.FC = () => {
 
   const handleCreditTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setOpCreditType(event.target.value);
-    console.log(event.target.value);
-  }
+  };
+  
   const [loanAmount, setLoanAmount] = useState<number>(0);
   const [priceGoods, setPriceGoods] = useState<number>(0);
   const [paymentTime, setPaymentTime] = useState<number>(12); // valor por defecto

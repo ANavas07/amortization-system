@@ -34,7 +34,7 @@ export type tableAmortizationDataT={
     insurance: number,
     fee: number,
     balance: number,
-}
+};
 
 export type bankT = {
     name: string,
@@ -43,8 +43,14 @@ export type bankT = {
     email: string,
     slogan: string,
     logo?: string,
-}
+};
 
+export type loanSettingsT = {
+        interest: number;
+        insurance: number;
+        minAmount: number;
+        maxAmount: number;
+}
 
 
 

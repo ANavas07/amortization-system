@@ -1,6 +1,7 @@
 import { InferAttributes } from "sequelize";
 import { Users } from "../models/users.models";
 import { Admin } from "../models/administrators.models";
+import Banks from "../models/Banks";
 
 export type ValidateRoleAndRouteId = {
     dni: string,
@@ -15,7 +16,7 @@ export type UserT = InferAttributes<Users>;
 
 export type UpdateUserT = Pick<Users, 'dni' | 'name' | 'lastName' | 'userName' | 'phone' | 'address' | 'password'>;
 
-
+export type BanksT=InferAttributes<Banks>;
 export type SaasAdminLoginT=Pick<Admin,  'userName' | 'email' | 'password' >;
 
 export type DataPaginationT = {

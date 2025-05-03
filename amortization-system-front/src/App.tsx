@@ -9,7 +9,7 @@ import CreditTypes from './pages/Dashboard/creditTypes';
 import Profile from './pages/banks';
 import Settings from './pages/Settings';
 import DefaultLayout from './layout/DefaultLayout';
-import RoutesRegistration from './pages/Dashboard/routes.processes';
+import LoanSettings from './pages/loansSettings';
 import { Toaster } from 'react-hot-toast';
 import { useAuthContext } from './context/AuthContext';
 import ProtectedRoute from './utils/protectedRoute.utils';
@@ -100,14 +100,13 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Added by me  */}
             <Route
-              path="/processes/routes"
+              path="/auth/loanSettings"
               element={
-                <ProtectedRoute requiredRole={['admin', 'clerk']}>
+                <ProtectedRoute requiredRole={['admin']}>
                   <>
-                    <PageTitle title="Routes | DevChickenBros" />
-                    <RoutesRegistration />
+                    <PageTitle title="Signin | DevChickenBros" />
+                    <LoanSettings />
                   </>
                 </ProtectedRoute>
               }

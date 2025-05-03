@@ -17,7 +17,8 @@ export const getConfigSystem = async (req: Request, res: Response) => {
 
 export const updateConfigSystem = async (req: Request, res: Response) => {
     try {
-        const changes = req.body as Partial<Record<string, number>>;
+        // const changes = req.body as Partial<Record<string, number>>;
+        const changes = req.body as any;
         const validKeys = [
             "consumo",
             "vehicular",

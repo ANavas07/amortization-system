@@ -34,6 +34,7 @@ export default function useBank() {
             if(imageFile){
                 formData.append('logo', imageFile);
             };
+            console.log(changes.logo);
             //Agregar los demas campos de cooperativeData a FormData
             Object.entries(changes).forEach(([key, value]) => {
                 formData.append(key, value as string);

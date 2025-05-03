@@ -28,7 +28,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   //Recuperar la imagen de la empresa.
   const localStorageData = localStorage.getItem('chaski-log');
   const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : BrandLogo;
-
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -202,6 +201,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               }
                             >
                               Registro de usuarios
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/auth/loanSettings"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Ajustes de prestamos
                             </NavLink>
                           </li>
                         </ul>

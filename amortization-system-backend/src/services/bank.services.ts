@@ -5,15 +5,10 @@ export const getBanksService = async () => {
     try {
         const bank = await Banks.findAll();
         if (!bank) {
-            return {
-                status: 404,
-                msg: "No hay bancos registrados"
-            }
+
+            return "No hay bancos registrados";
         }
-        return {
-            status: 200,
-            msg: bank
-        }
+        return bank
     } catch (error) {
         return handleSequelizeError(error);
     }
