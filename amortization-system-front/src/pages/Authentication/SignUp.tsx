@@ -20,12 +20,11 @@ const initialStateSignUp: CreateUserT = {
   email: '',
   phone: '',
   address: '',
-  roleID: '',
+  roleID: 'B',
 };
 
 const SignUp: React.FC = () => {
-  const [inputSignUp, setInputSignUp] =
-    useState<CreateUserT>(initialStateSignUp);
+  const [inputSignUp, setInputSignUp] = useState<CreateUserT>(initialStateSignUp);
   const { loading, signUp } = createUser();
 
   const handleChange = (
@@ -94,6 +93,27 @@ const SignUp: React.FC = () => {
 
                   <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
+                      Nombre de usuario
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Usuario"
+                        maxLength={20}
+                        id="userName"
+                        value={inputSignUp.userName}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      />
+                      <span className="absolute right-4 top-4">
+                        <FaUserAstronaut className="w-[22px] h-[22px]" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                  <div className="mb-4">
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">
                       Nombre
                     </label>
                     <div className="relative">
@@ -111,8 +131,8 @@ const SignUp: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </div>
-                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+
+                  {/* Username */}
                   <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                       Apellido
@@ -129,27 +149,6 @@ const SignUp: React.FC = () => {
                       />
                       <span className="absolute right-4 top-4">
                         <FaUserTie className="w-[22px] h-[22px]" />
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Username */}
-                  <div className="mb-4">
-                    <label className="mb-2.5 block font-medium text-black dark:text-white">
-                      Nombre de usuario
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder="Usuario"
-                        maxLength={20}
-                        id="userName"
-                        value={inputSignUp.userName}
-                        onChange={handleChange}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      />
-                      <span className="absolute right-4 top-4">
-                        <FaUserAstronaut className="w-[22px] h-[22px]" />
                       </span>
                     </div>
                   </div>
@@ -223,16 +222,13 @@ const SignUp: React.FC = () => {
                 </label>
 
                 <div className="relative">
-                  <select
-                    className="w-full rounded border border-stroke bg-gray py-3 pl-4.5 pr-11.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary appearance-none"
-                    name="role"
+                  <input
+                    className="w-full rounded border border-stroke bg-gray py-3 pl-4.5 pr-11.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="text"
                     id="roleID"
-                    value={inputSignUp.roleID}
-                    onChange={handleChange}
-                    disabled
-                  >
-                    <option value="advisor">Asesor</option>
-                  </select>
+                    value="Asesor"
+                    readOnly
+                  />
                   <span className="absolute right-4.5 top-4">
                     <RiTeamFill className="w-[22px] h-[22px]" />
                   </span>

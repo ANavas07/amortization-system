@@ -81,7 +81,7 @@ function App() {
             <Route
               path="/profile"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole={['A']}>
                   <>
                     <PageTitle title="Cooperativa | DevChickenBros" />
                     <Profile />
