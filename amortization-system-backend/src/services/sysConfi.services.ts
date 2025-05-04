@@ -32,4 +32,4 @@ export const updateConfigSystemService = async (dataConfiguration:Record<string,
             msg: error
         };
     }
-}
+};

@@ -53,7 +53,13 @@ export type loanSettingsT = {
         minCostGoods: number;
 }
 
-
+export type investmentResultT = {
+    initialAmount: number,
+    days: number,
+    yearlyRate: string,
+    finalAmount: string,
+    earnedInterest: string,
+}
 
 
 
