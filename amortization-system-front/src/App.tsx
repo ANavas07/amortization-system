@@ -68,12 +68,10 @@ function App() {
             <Route
               path='/investments'
               element={
-                <ProtectedRoute requiredRole={['A', 'B']}>
                   <>
                     <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
                     <Investments />
                   </>
-                </ProtectedRoute>
               }
             />
             <Route
