@@ -7,5 +7,4 @@ const router = Router();
 router.get("/", getBanks);
 router.put("/modBank", upload.single('logo') ,updateBank);
 
-
 export default router;
