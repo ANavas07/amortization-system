@@ -58,7 +58,7 @@ function App() {
             <Route
               path='/'
               element={
-                <ProtectedRoute requiredRole={['A', 'S']}>
+                <ProtectedRoute requiredRole={['A', 'B']}>
                   <>
                     <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
                     <CreditTypes />
@@ -69,7 +69,7 @@ function App() {
             <Route
               path="/profile"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole={['A']}>
                   <>
                     <PageTitle title="Cooperativa | DevChickenBros" />
                     <Profile />

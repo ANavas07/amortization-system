@@ -24,6 +24,8 @@ const CreditTypes: React.FC = () => {
   });
   const [error, setError] = useState<string>('');
   const [errorG, setErrorG] = useState<string>('');
+  // Estado para controlar si se ha seleccionado un tipo de crédito válido
+  const [isCreditTypeSelected, setIsCreditTypeSelected] = useState(false);
 
   const { authUser } = useAuthContext();
 
@@ -47,8 +49,17 @@ const CreditTypes: React.FC = () => {
   };
 
   const handleCreditTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setOpCreditType(event.target.value);
-    selectedLoanSettings[event.target.value] && setLoanControlSettings(selectedLoanSettings[event.target.value]);
+    const selectedValue = event.target.value;
+    setOpCreditType(selectedValue);
+    
+    // Verificar si se seleccionó una opción válida (no la opción por defecto)
+    if (selectedValue && selectedValue !== "¿Que tipo de credito necesitas?") {
+      setIsCreditTypeSelected(true);
+    } else {
+      setIsCreditTypeSelected(false);
+    }
+    
+    selectedLoanSettings[selectedValue] && setLoanControlSettings(selectedLoanSettings[selectedValue]);
   };
 
   const [loanAmount, setLoanAmount] = useState<number>(0);
@@ -273,6 +284,7 @@ const CreditTypes: React.FC = () => {
                 id="priceGoods"
                 className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleCostGoodsChange}
+                disabled={!isCreditTypeSelected}
               />
               <p className="text-xs text-gray-500 mt-1">Min. {loanControlSettings.minCostGoods}</p>
               <p className="text-xs text-gray-500 mt-1">Max. {loanControlSettings.maxCostGoods}</p>
@@ -293,6 +305,7 @@ const CreditTypes: React.FC = () => {
               id="loanAmount"
               className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
               onChange={handleLoanAmountChange}
+              disabled={!isCreditTypeSelected}
             />
             <p className="text-xs text-gray-500 mt-1">Min. {loanControlSettings.minAmount}</p>
             <p className="text-xs text-gray-500 mt-1">Max. {loanControlSettings.maxAmount}</p>
@@ -317,6 +330,7 @@ const CreditTypes: React.FC = () => {
                 }}
                 className="select w-full rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none
                   dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-white"
+                disabled={!isCreditTypeSelected}
               >
                 <option value="" disabled>Selecciona el tiempo</option>
                 {
@@ -336,16 +350,18 @@ const CreditTypes: React.FC = () => {
             <div className="flex space-x-4">
               <div
                 className={`flex-1 p-4 border rounded cursor-pointer transition-shadow duration-200
-                  ${amortizationSystem === 'frances' ? 'shadow-lg ring-2 ring-blue-400' : 'shadow-none'}`}
-                onClick={() => setAmortizationSystem('frances')}
+                  ${amortizationSystem === 'frances' ? 'shadow-lg ring-2 ring-blue-400' : 'shadow-none'}
+                  ${!isCreditTypeSelected ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={() => isCreditTypeSelected && setAmortizationSystem('frances')}
               >
                 <p className="font-medium mb-1">Método Francés</p>
                 <p className="text-xs">Cuotas se mantienen fijas en el tiempo</p>
               </div>
               <div
                 className={`flex-1 p-4 border rounded cursor-pointer transition-shadow duration-200
-                  ${amortizationSystem === 'aleman' ? 'shadow-lg ring-2 ring-blue-400' : 'shadow-none'}`}
-                onClick={() => setAmortizationSystem('aleman')}
+                  ${amortizationSystem === 'aleman' ? 'shadow-lg ring-2 ring-blue-400' : 'shadow-none'}
+                  ${!isCreditTypeSelected ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={() => isCreditTypeSelected && setAmortizationSystem('aleman')}
               >
                 <p className="font-medium mb-1">Método Alemán</p>
                 <p className="text-xs">Cuotas variables que decrecen en el tiempo</p>
@@ -354,9 +370,10 @@ const CreditTypes: React.FC = () => {
           </div>
 
           <button
-            className="w-full py-3 bg-transparent/10 font-medium border rounded hover:bg-transparent/20 transition-colors"
+            className={`w-full py-3 bg-transparent/10 font-medium border rounded hover:bg-transparent/20 transition-colors
+              ${!isCreditTypeSelected ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={() =>
-              amortizationSystemHandler({
+              isCreditTypeSelected && amortizationSystemHandler({
                 method: amortizationSystem || '',
                 loanAmount,
                 priceGoods,
@@ -364,6 +381,7 @@ const CreditTypes: React.FC = () => {
                 interestRate: loanControlSettings.interest // o podrías hacerlo variable también
               })
             }
+            disabled={!isCreditTypeSelected}
           >
             Simular
           </button>
@@ -428,8 +446,11 @@ const CreditTypes: React.FC = () => {
             *Valores referenciales, no son considerados como una oferta formal de préstamo. La oferta definitiva está sujeta al cumplimiento de las condiciones y políticas referentes a capacidad de pago.
           </p>
 
-          <button className="text-blue-600 hover:text-blue-800 text-center mb-100"
-            onClick={() => openModal()}>
+          <button 
+            className={`text-blue-600 hover:text-blue-800 text-center mb-100 ${!isCreditTypeSelected || dataLoan.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => isCreditTypeSelected && dataLoan.length > 0 && openModal()}
+            disabled={!isCreditTypeSelected || dataLoan.length === 0}
+          >
             Ver tabla de amortización
           </button>
           <AmortizationPopup

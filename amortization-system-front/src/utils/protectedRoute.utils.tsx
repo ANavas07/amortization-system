@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
         toast.error('No tienes permisos para acceder a esta página');
         setTimeout(() => {
             <Navigate to="/"/>
-        }, 4000);
+        }, 2000);
         return;
     }
 
