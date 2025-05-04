@@ -3,6 +3,19 @@ import { ReactTabulator } from 'react-tabulator';
 import 'react-tabulator/lib/styles.css';          // estilos por defecto
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import { tableAmortizationDataT } from '../types';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { useAuthContext } from '../context/AuthContext';
+import useUsers from '../hooks/useUsers';
+import { useEffect, useState } from 'react';
+import { IMAGE_URL } from '../helpers/Constants'; // Asegúrate que esté correctamente importado
+
+
+
+
+// Asignación explícita requerida por Tabulator para reconocer jsPDF y autoTable
+(window as any).jsPDF = jsPDF;
+(window as any).autoTable = autoTable;
 
 interface AmortizationPopupProps {
     title: string;
@@ -13,6 +26,30 @@ interface AmortizationPopupProps {
 
 const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPopupProps) => {
     if (!isOpen) return null;
+    const { getUsersByDni } = useUsers();
+    const { authUser } = useAuthContext();
+    const [usuarioExtendido, setUsuarioExtendido] = useState<{ user_name: string } | null>(null);
+    const [bankLogoUrl, setBankLogoUrl] = useState<string>('');
+    const [bankName, setBankName] = useState<string>('');
+    useEffect(() => {
+    if (authUser?.dni) {
+        getUsersByDni(authUser.dni).then(data => {
+        setUsuarioExtendido(data);
+        });
+    }
+    }, [authUser]);
+    useEffect(() => {
+        const localStorageData = localStorage.getItem('chaski-log');
+        if (localStorageData) {
+          const parsed = JSON.parse(localStorageData);
+          if (parsed.logo) {
+            setBankLogoUrl(`${IMAGE_URL}${parsed.logo}`);
+          }
+          if (parsed.name) {
+            setBankName(parsed.name);
+          }
+        }
+      }, []);
 
     //Pdf
     const tableRef = useRef<any>(null);
@@ -29,28 +66,66 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
     ];
 
     const data = loanData
-    const downloadPdf = () => {
-        if (tableRef.current && tableRef.current.table) {
-            if (typeof tableRef.current.table.download === 'function') {
-                tableRef.current.table.download("pdf", "mi-tabla.pdf", {
-                    orientation: "portrait",
-                    title: "Reporte de Usuarios",
-                    autoTable: {
-                        styles: { fontSize: 10 },
-                        headStyles: { fillColor: [41, 128, 185] },
-                    }
-                });
-            } else {
-                console.error("El método download no está disponible. Asegúrate de que el módulo de descarga esté habilitado.");
-
-                if (typeof tableRef.current.table.download === 'undefined') {
-                    alert("La funcionalidad de descarga PDF no está disponible. Por favor, asegúrate de que tienes instalados los módulos necesarios.");
-                }
-            }
-        } else {
-            console.error("La referencia a la tabla no está disponible");
+    console.log("Data para PDF:", data);
+    console.log("banco:",bankName);
+    const downloadPdf = async () => {
+        const doc = new jsPDF();
+      
+        // Logo si está disponible
+        if (bankLogoUrl) {
+          try {
+            const img = await loadImage(bankLogoUrl);
+            doc.addImage(img, 'PNG', 10, 10, 30, 30);
+          } catch (err) {
+            console.warn('No se pudo cargar el logo del banco:', err);
+          }
         }
-    };
+      
+        // Nombre del banco
+        doc.setFontSize(16);
+        doc.text(bankName , 105, 20, { align: 'center' });
+      
+        // Nombre del usuario
+        if (usuarioExtendido?.user_name) {
+          doc.setFontSize(10);
+          doc.text(`Usuario: ${usuarioExtendido.user_name}`, 105, 30, { align: 'center' });
+        }
+      
+        // Tabla
+        autoTable(doc, {
+          startY: 45,
+          head: [[
+            "Cuotas", "Fecha de pago", "Capital", "Interés",
+            "Seguro desg.", "Seguro Inc/Vehículo", "Valor cuota", "Saldo"
+          ]],
+          body: loanData.map(item => [
+            item.id,
+            item.paymentDate,
+            item.capital,
+            item.interest,
+            item.lifeInsurance,
+            item.insurance,
+            item.fee,
+            item.balance
+          ]),
+          styles: { fontSize: 8 },
+          headStyles: { fillColor: [41, 128, 185] },
+        });
+      
+        doc.save("tabla_amortizacion.pdf");
+      };
+      
+      // Cargador de imagen
+      const loadImage = (url: string): Promise<HTMLImageElement> => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'Anonymous'; // para permitir carga externa
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = url;
+        });
+      };
+      
 
     return (
 
