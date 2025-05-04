@@ -14,6 +14,7 @@ import { Toaster } from 'react-hot-toast';
 import { useAuthContext } from './context/AuthContext';
 import ProtectedRoute from './utils/protectedRoute.utils';
 import { authInterceptor } from './hooks/useInterceptor';
+import Investments from './pages/Dashboard/investments';
 
 
 function App() {
@@ -58,10 +59,21 @@ function App() {
             <Route
               path='/'
               element={
-                <ProtectedRoute requiredRole={['A', 'S']}>
+                <ProtectedRoute requiredRole={['A', 'B']}>
                   <>
                     <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
                     <CreditTypes />
+                  </>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/investments'
+              element={
+                <ProtectedRoute requiredRole={['A', 'B']}>
+                  <>
+                    <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
+                    <Investments />
                   </>
                 </ProtectedRoute>
               }
