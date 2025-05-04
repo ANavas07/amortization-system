@@ -6,12 +6,27 @@ import { CiLogout } from "react-icons/ci";
 import { useLogout } from '../../hooks/useLogout';
 import { useAuthContext } from '../../context/AuthContext';
 import { IoSettingsOutline, IoBusinessSharp } from "react-icons/io5";
+import { FaSignInAlt } from "react-icons/fa";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { loading, logout } = useLogout();
   const { authUser } = useAuthContext();
 
+  // Si no hay usuario autenticado, mostrar botón de inicio de sesión
+  if (!authUser) {
+    return (
+      <Link
+        to="/auth/signin"
+        className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90 transition-all"
+      >
+        <FaSignInAlt />
+        <span className="hidden md:inline">Iniciar Sesión</span>
+      </Link>
+    );
+  }
+
+  // Si hay usuario autenticado, mostrar el dropdown
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
       <Link
@@ -21,10 +36,10 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {authUser ? authUser.full_name : 'User'}
+            {authUser.full_name}
           </span>
           <span className="block text-xs">
-            {authUser ? authUser.dni : 'Welcome'}
+            {authUser.dni}
           </span>
         </span>
 

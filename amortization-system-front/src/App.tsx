@@ -58,12 +58,10 @@ function App() {
             <Route
               path='/'
               element={
-                <ProtectedRoute requiredRole={['A', 'B']}>
-                  <>
-                    <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
-                    <CreditTypes />
-                  </>
-                </ProtectedRoute>
+                <>
+                  <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
+                  <CreditTypes />
+                </>
               }
             />
             <Route

@@ -7,6 +7,7 @@ import { IoSettingsOutline, IoBusinessSharp } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import { FaKey } from "react-icons/fa";
 import { IMAGE_URL } from '../../helpers/Constants';
+import { useAuthContext } from '../../context/AuthContext';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -16,6 +17,7 @@ interface SidebarProps {
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
+  const { authUser } = useAuthContext();
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -161,97 +163,133 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup>
               {/* <!-- Menu Item Dashboard --> */}
 
-              {/* <!-- Menu Item Administrators --> */}
-              <SidebarLinkGroup
-                activeCondition={
-                  pathname === '/auth' || pathname.includes('auth')
-                }
-              >
-                {(handleClick, open) => {
-                  return (
-                    <React.Fragment>
-                      <NavLink
-                        to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/auth' || pathname.includes('auth')) &&
-                          'bg-graydark dark:bg-meta-4'
-                          }`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          sidebarExpanded
-                            ? handleClick()
-                            : setSidebarExpanded(true);
-                        }}
-                      >
-                        <FaKey />
-                        Administrador
-                        <IoIosArrowDown className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'}`} />
-                      </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
-                      <div
-                        className={`translate transform overflow-hidden ${!open && 'hidden'
-                          }`}
-                      >
-                        <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
-                          <li>
-                            <NavLink
-                              to="/auth/signup"
-                              className={({ isActive }) =>
-                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                (isActive && '!text-white')
-                              }
-                            >
-                              Registro de usuarios
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/auth/loanSettings"
-                              className={({ isActive }) =>
-                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                (isActive && '!text-white')
-                              }
-                            >
-                              Ajustes de prestamos
-                            </NavLink>
-                          </li>
-                        </ul>
-                      </div>
-                      {/* <!-- Dropdown Menu End --> */}
-                    </React.Fragment>
-                  );
-                }}
-              </SidebarLinkGroup>
-              {/* <!-- Menu Item Administrators --> */}
-
-              {/* <!-- Menu Item Profile --> */}
-              <li>
-                <NavLink
-                  to="/profile"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
-                    }`}
+              {/* <!-- Menu Item Administrators - Solo mostrar si hay usuario autenticado --> */}
+              {authUser && (
+                <SidebarLinkGroup
+                  activeCondition={
+                    pathname === '/auth' || pathname.includes('auth')
+                  }
                 >
-                  <IoBusinessSharp />
-                  Mi Empresa
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Profile --> */}
-              {/* <!-- Menu Item Settings --> */}
-              <li>
-                <NavLink
-                  to="/settings"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('settings') &&
-                    'bg-graydark dark:bg-meta-4'
-                    }`}
+                  {(handleClick, open) => {
+                    return (
+                      <React.Fragment>
+                        <NavLink
+                          to="#"
+                          className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/auth' || pathname.includes('auth')) &&
+                            'bg-graydark dark:bg-meta-4'
+                            }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            sidebarExpanded
+                              ? handleClick()
+                              : setSidebarExpanded(true);
+                          }}
+                        >
+                          <FaKey />
+                          Administrador
+                          <IoIosArrowDown className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'}`} />
+                        </NavLink>
+                        {/* <!-- Dropdown Menu Start --> */}
+                        <div
+                          className={`translate transform overflow-hidden ${!open && 'hidden'
+                            }`}
+                        >
+                          <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+                            <li>
+                              <NavLink
+                                to="/auth/signup"
+                                className={({ isActive }) =>
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                  (isActive && '!text-white')
+                                }
+                              >
+                                Crear Usuario
+                              </NavLink>
+                            </li>
+                            <li>
+                              <NavLink
+                                to="/auth/loanSettings"
+                                className={({ isActive }) =>
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                  (isActive && '!text-white')
+                                }
+                              >
+                                Configuración de Préstamos
+                              </NavLink>
+                            </li>
+                          </ul>
+                        </div>
+                        {/* <!-- Dropdown Menu End --> */}
+                      </React.Fragment>
+                    );
+                  }}
+                </SidebarLinkGroup>
+              )}
+              {/* <!-- Menu Item Settings - Solo mostrar si hay usuario autenticado --> */}
+              {authUser && (
+                <SidebarLinkGroup
+                  activeCondition={
+                    pathname === '/settings' || pathname.includes('settings')
+                  }
                 >
-                  <IoSettingsOutline />
-                  Mi Perfil
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Settings --> */}
+                  {(handleClick, open) => {
+                    return (
+                      <React.Fragment>
+                        <NavLink
+                          to="#"
+                          className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === '/settings' || pathname.includes('settings')) &&
+                            'bg-graydark dark:bg-meta-4'
+                            }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            sidebarExpanded
+                              ? handleClick()
+                              : setSidebarExpanded(true);
+                          }}
+                        >
+                          <IoSettingsOutline />
+                          Ajustes
+                          <IoIosArrowDown className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'}`} />
+                        </NavLink>
+                        {/* <!-- Dropdown Menu Start --> */}
+                        <div
+                          className={`translate transform overflow-hidden ${!open && 'hidden'
+                            }`}
+                        >
+                          <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+                            <li>
+                              <NavLink
+                                to="/settings"
+                                className={({ isActive }) =>
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                  (isActive && '!text-white')
+                                }
+                              >
+                                Mi Perfil
+                              </NavLink>
+                            </li>
+                            <li>
+                              <NavLink
+                                to="/profile"
+                                className={({ isActive }) =>
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                  (isActive && '!text-white')
+                                }
+                              >
+                                Ajustes Cooperativa
+                              </NavLink>
+                            </li>
+                          </ul>
+                        </div>
+                        {/* <!-- Dropdown Menu End --> */}
+                      </React.Fragment>
+                    );
+                  }}
+                </SidebarLinkGroup>
+              )}
             </ul>
           </div>
         </nav>
-        {/* <!-- Sidebar Menu --> */}
       </div>
     </aside>
   );
