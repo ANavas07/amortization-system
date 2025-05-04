@@ -27,7 +27,6 @@ const CreditTypes: React.FC = () => {
   // Estado para controlar si se ha seleccionado un tipo de crédito válido
   const [isCreditTypeSelected, setIsCreditTypeSelected] = useState(false);
 
-  const { authUser } = useAuthContext();
 
   useEffect(() => {
 
