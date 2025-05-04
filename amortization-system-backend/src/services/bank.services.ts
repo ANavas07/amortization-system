@@ -16,11 +16,8 @@ export const getBanksService = async () => {
 
 export const updateBankService = async (changes: Partial<Banks>) => {
     try {
-        const bank = await Banks.findOne({
-            where: {
-                name: changes.name,
-            }
-        });
+        const bank = await Banks.findOne({});
+
         if (!bank) {
             return { msg: "No existe el banco" };
         };

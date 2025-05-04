@@ -104,7 +104,6 @@ const Investments: React.FC = () => {
 
     if (investmentRateTime !== null) {
       const result = getInvestmentSimulation(investAmount);
-      console.log(result);
       setInvestmentFinalData(result);
     } else {
       toast.error('Por favor, selecciona un sistema de amortización válido.');

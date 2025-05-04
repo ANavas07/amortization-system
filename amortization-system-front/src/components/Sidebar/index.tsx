@@ -8,6 +8,7 @@ import { RxDashboard } from "react-icons/rx";
 import { FaKey } from "react-icons/fa";
 import { IMAGE_URL } from '../../helpers/Constants';
 import { useAuthContext } from '../../context/AuthContext';
+import useBank from '../../hooks/useBank';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -18,6 +19,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
   const { authUser } = useAuthContext();
+  const {getBanks} = useBank();
+  const [bankData, setBankData] = useState('');
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -27,9 +30,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
   );
 
-  //Recuperar la imagen de la empresa.
-  const localStorageData = localStorage.getItem('chaski-log');
-  const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : BrandLogo;
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -42,9 +42,32 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         return;
       setSidebarOpen(false);
     };
+
+    const loadImg= async ()=>{
+      const data = await getBanks();
+      return data.msg[0].logo;
+    }
+
+    loadImg().then((logoImg) => {
+      setBankData(logoImg);
+    }).catch((error) => {
+      console.error("Error loading bank logo:", error);
+    });
+
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
-  });
+  }, []);
+
+
+  //Recuperar la imagen de la empresa.
+  let logo = '';
+  const localStorageData = localStorage.getItem('chaski-log');
+  if(!localStorageData){
+    logo = bankData ? `${IMAGE_URL}${bankData}` : BrandLogo;
+  }else{
+    logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : BrandLogo;
+  }
+  
 
   // close if the esc key is pressed
   useEffect(() => {
