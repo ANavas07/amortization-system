@@ -198,7 +198,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Dashboard --> */}
 
               {/* <!-- Menu Item Administrators - Solo mostrar si hay usuario autenticado --> */}
-              {authUser && (
+              {authUser && authUser.role === 'A' && (
                 <SidebarLinkGroup
                   activeCondition={
                     pathname === '/auth' || pathname.includes('auth')
@@ -293,7 +293,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                             <li>
                               <NavLink
-                                to="/settings"
+                                to="/profile"
                                 className={({ isActive }) =>
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                   (isActive && '!text-white')
@@ -302,17 +302,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 Mi Perfil
                               </NavLink>
                             </li>
-                            <li>
-                              <NavLink
-                                to="/profile"
-                                className={({ isActive }) =>
-                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                  (isActive && '!text-white')
-                                }
-                              >
-                                Ajustes Cooperativa
-                              </NavLink>
-                            </li>
+                            {authUser.role === 'A' && (
+                              <li>
+                                <NavLink
+                                  to="/settings"
+                                  className={({ isActive }) =>
+                                    'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                    (isActive && '!text-white')
+                                  }
+                                >
+                                  Ajustes Cooperativa
+                                </NavLink>
+                              </li>
+                            )}
                           </ul>
                         </div>
                         {/* <!-- Dropdown Menu End --> */}

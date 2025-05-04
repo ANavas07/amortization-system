@@ -79,8 +79,8 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={['A']}>
                   <>
-                    <PageTitle title="Cooperative | DevChickenBros" />
-                    <Profile />
+                    <PageTitle title="Settings | DevChickenBros" />
+                    <Settings />
                   </>
                 </ProtectedRoute>
               }
@@ -90,8 +90,8 @@ function App() {
               element={
                 <ProtectedRoute>
                   <>
-                    <PageTitle title="Settings | DevChickenBros" />
-                    <Settings />
+                    <PageTitle title="Profile | DevChickenBros" />
+                    <Profile />
                   </>
                 </ProtectedRoute>
               }
