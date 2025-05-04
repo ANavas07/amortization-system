@@ -61,7 +61,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   //Recuperar la imagen de la empresa.
   let logo = '';
-  const localStorageData = localStorage.getItem('chaski-log');
+  const localStorageData = localStorage.getItem('user-log');
   if(!localStorageData){
     logo = bankData ? `${IMAGE_URL}${bankData}` : BrandLogo;
   }else{

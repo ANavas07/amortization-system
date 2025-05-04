@@ -39,7 +39,7 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
     }
     }, [authUser]);
     useEffect(() => {
-        const localStorageData = localStorage.getItem('chaski-log');
+        const localStorageData = localStorage.getItem('user-log');
         if (localStorageData) {
           const parsed = JSON.parse(localStorageData);
           if (parsed.logo) {

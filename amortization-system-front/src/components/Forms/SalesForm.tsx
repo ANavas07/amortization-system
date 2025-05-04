@@ -265,7 +265,7 @@ const SalesForm: React.FC<SalesFormProps> = ({ dataFrequency, onUpdateBus }: Sal
             return;
         };
 
-        const localStorageData = localStorage.getItem('chaski-log');
+        const localStorageData = localStorage.getItem('user-log');
         const cooperative_id = localStorageData ? JSON.parse(localStorageData).cooperative : null;
 
         const purchaseData: TicketClientInformationT = {

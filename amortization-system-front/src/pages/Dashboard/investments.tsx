@@ -152,7 +152,7 @@ const Investments: React.FC = () => {
     <>
       <Breadcrumb pageName="Simulador de inversiones" />
 
-      <div className="flex flex-col md:flex-row border-stroke bg-transparent rounded-lg shadow-md max-w-6xl mx-auto mt-8">
+      <div className="flex flex-col md:flex-row border-stroke bg-transparent rounded-lg shadow-md max-w-6xl mx-auto mt-8 dark:bg-boxdark">
         <div className="w-full md:w-1/2 p-6 border-stroke bg-transparent rounded-l-lg text-black dark:text-white">
           <div className="mb-6">
             <label htmlFor="investAmount" className="block text-sm font-medium  mb-2">
@@ -232,8 +232,8 @@ const Investments: React.FC = () => {
 
           <div className="text-center mb-4">
             <p className="text-4xl font-bold "></p>
-            <p className="text-sm mt-2">Durante <span className="font-medium">{ investmentFinalData?.days} días</span></p>
-            <p className="text-sm">Con una tasa de interés <span className="font-medium">{ investmentFinalData?.yearlyRate}</span></p>
+            <p className="text-sm mt-2">Durante <span className="font-medium">{investmentFinalData?.days} días</span></p>
+            <p className="text-sm">Con una tasa de interés <span className="font-medium">{investmentFinalData?.yearlyRate}</span></p>
           </div>
 
           <div className="bg-transparent rounded-lg p-4 mb-4 border border-stroke">

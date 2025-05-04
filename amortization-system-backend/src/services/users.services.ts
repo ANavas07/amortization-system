@@ -160,6 +160,7 @@ export const updateUserService = async (userData: UpdateUserT) => {
         });
 
         if (!userExists) {
+            console.log("Usuario no encontrado");
             return { status: 404, json: { error: HandleMessages.USER_NOT_FOUND } };
         }
 
