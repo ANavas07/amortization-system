@@ -30,7 +30,6 @@ const CreditTypes: React.FC = () => {
   const { authUser } = useAuthContext();
 
   useEffect(() => {
-    if (!authUser) return;
 
     const loadSettings = async () => {
       const loanSettingsData = await getLoanSettings();
@@ -38,7 +37,7 @@ const CreditTypes: React.FC = () => {
     }
 
     loadSettings();
-  }, [authUser]);
+  }, []);
 
   const openModal = () => {
     setIsModalOpen(true);
