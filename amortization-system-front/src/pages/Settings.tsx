@@ -9,7 +9,7 @@ import {
 import { useAuthContext } from '../context/AuthContext'; // Asumiendo que tienes este contexto
 
 const Settings: React.FC = () => {
-  const { getUsersByDni, updateUsers, loading } = useUsers();
+  const { getUsers, updateUsers, loading } = useUsers();
   const { authUser } = useAuthContext(); // Obtener datos del usuario autenticado
   const [dni, setDni] = useState(authUser?.dni || ''); // Inicializar con el DNI del usuario autenticado
   const [formData, setFormData] = useState({
@@ -24,20 +24,19 @@ const Settings: React.FC = () => {
   useEffect(() => {
     // Aquí emulamos que los datos del usuario se cargan automáticamente al acceder a la página
     if (authUser?.dni) {
-      loadUserData(authUser.dni); // Llamamos a la función para cargar los datos automáticamente
+      loadUserData(); // Llamamos a la función para cargar los datos automáticamente
     }
   }, [authUser]); // Solo se ejecuta cuando cambia el usuario autenticado
 
-  const loadUserData = async (dni: string) => {
+  const loadUserData = async () => {
     setIsLoadingData(true);
     try {
-      const userData = await getUsersByDni(dni);
+      const userData = await getUsers();
       if (userData) {
         setFormData({
-          user_name: userData.user_name || '',
+          user_name: userData.userName || '',
           phone: userData.phone || '',
-          password:'',
-          // No precargar la contraseña por seguridad
+          password: '',
           address: userData.address || '',
         });
         setIsUserFound(true);
@@ -45,7 +44,7 @@ const Settings: React.FC = () => {
         setIsUserFound(false);
       }
     } catch (error) {
-      throw new Error('Error al cargar los datos del usuario'); 
+      throw new Error('Error al cargar los datos del usuario');
     } finally {
       setIsLoadingData(false);
     }
@@ -82,13 +81,10 @@ const Settings: React.FC = () => {
       {/* Formulario para actualizar datos */}
       <form
         onSubmit={handleUpdateSubmit}
-        className="update-form bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-sm"
+        className="update-form p-6 rounded-lg shadow-sm"
       >
         {/* DNI (oculto visualmente) */}
-        <div
-          className="mb-5.5 flex flex-col gap-5.5 sm:flex-row"
-          style={{ display: 'none' }}
-        >
+        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row" style={{ display: 'none' }}>
           <div className="mb-4">
             <label className="mb-2.5 block font-medium text-black dark:text-white">
               Cédula de Identidad
@@ -108,7 +104,7 @@ const Settings: React.FC = () => {
         </div>
 
         {/* Nombre de usuario */}
-        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row justify-center">
           <div className="mb-4">
             <label className="mb-2.5 block font-medium text-black dark:text-white">
               Nombre de usuario
@@ -132,7 +128,7 @@ const Settings: React.FC = () => {
         </div>
 
         {/* Direccion del Usuario */}
-        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row justify-center">
           <div className="mb-4">
             <label className="mb-2.5 block font-medium text-black dark:text-white">
               Direccion del Usuario
@@ -178,7 +174,7 @@ const Settings: React.FC = () => {
         </div>
 
         {/* Contraseña */}
-        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row justify-center">
           <div className="mb-4">
             <label className="mb-2.5 block font-medium text-black dark:text-white">
               Contraseña
@@ -202,13 +198,15 @@ const Settings: React.FC = () => {
         </div>
 
         {/* Botón para actualizar el perfil */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition dark:bg-green-700 dark:hover:bg-green-600"
-        >
-          {loading ? 'Actualizando...' : 'Actualizar Perfil'}
-        </button>
+        <div className='flex flex-col justify-center'>
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition dark:bg-green-700 dark:hover:bg-green-600 mx-auto"
+          >
+            {loading ? 'Actualizando...' : 'Actualizar Perfil'}
+          </button>
+        </div>
       </form>
     </div>
   );

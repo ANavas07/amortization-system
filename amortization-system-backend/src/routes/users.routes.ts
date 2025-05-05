@@ -1,6 +1,6 @@
 import { Router } from "express";
 import protectRoute from "../middleware/protectRoute.middleware";
-import { getUsers, registerAndSendEmail } from "../controllers/users.controllers";
+import { getUsers, registerAndSendEmail, updateUser } from "../controllers/users.controllers";
 
 const router = Router();
 /**
@@ -50,7 +50,8 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/', protectRoute ,getUsers);
+router.get('/', protectRoute, getUsers);
+router.put('/updateUser', protectRoute, updateUser);
 
 /**
  * @swagger
@@ -101,7 +102,7 @@ router.get('/', protectRoute ,getUsers);
  *       500:
  *         description: Error interno del servidor.
  */
-router.post('/signUp', protectRoute,registerAndSendEmail);
-router.post('/signUp/admin' ,registerAndSendEmail);
+router.post('/signUp', protectRoute, registerAndSendEmail);
+router.post('/signUp/admin', registerAndSendEmail);
 
 export default router;

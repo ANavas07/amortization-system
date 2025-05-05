@@ -1,14 +1,14 @@
 import { Request, Response } from "express"
 import { handleSequelizeError } from "../utils/helpers.utils"
 import { HandleMessages } from "../error/handleMessages.error"
-import { createUserService, getUsersService, updateUserService } from "../services/users.services"
+import { createUserService, getUserByIdService, updateUserService } from "../services/users.services"
 import { UserT } from "../types/index.types";
 import { sendEmail } from "../services/mail.services";
 
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        const { dni } = req.userReq as { dni: string }
-        const result = await getUsersService(dni);
+        const { dni } = req.userReq as { dni : string }
+        const result = await getUserByIdService(dni);
         res.status(result.status).json(result.json);
         return;
     } catch (error) {
@@ -62,6 +62,7 @@ export const registerAndSendEmail = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     const { dni, name, lastName, userName, phone, address, password } = req.body;
+    console.log(req.body);
     const result = await updateUserService({ dni, name, lastName, userName, phone, address, password });
     if (result.status !== 201) {
         res.status(result.status).json(result.json);

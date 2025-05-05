@@ -67,7 +67,6 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
 
   const downloadPdf = async () => {
     const doc = new jsPDF();
-    console.log("Intentando cargar logo desde:", logoUrl);
 
     // Logo
     if (logoUrl) {
@@ -106,16 +105,21 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
 
     doc.save('tabla_amortizacion.pdf');
   };
+  console.log("Intentando cargar logo desde:", logoUrl);
 
   const loadImage = (url: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.crossOrigin = 'Anonymous';
+      img.crossOrigin = 'anonymous';
       img.onload = () => resolve(img);
-      img.onerror = reject;
+      img.onerror = (e) => {
+        console.error("Falló carga de logo", e);
+        reject(new Error('Logo no cargado'));
+      };
       img.src = url;
     });
   };
+  
 
   return (
     <dialog open className="modal modal-middle z-[10000]">

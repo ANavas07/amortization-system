@@ -30,7 +30,7 @@ const Profile = () => {
   const [previewImg, setPreviewImg] = useState<string | null>(null);
 
   //Recuperar la imagen de la empresa.
-  const localStorageData = localStorage.getItem('chaski-log');
+  const localStorageData = localStorage.getItem('user-log');
   const logo = localStorageData && JSON.parse(localStorageData).logo ? `${IMAGE_URL}${JSON.parse(localStorageData).logo}` : BrandLogo;
 
   useEffect(()=>{
@@ -44,9 +44,9 @@ const Profile = () => {
   }, [btnCancelPressed]);
 
   const changeLogoValueLocalStorage = async () => {
-    const localStorageData = localStorage.getItem('chaski-log'); // Leer los datos actuales del localStorage
+    const localStorageData = localStorage.getItem('user-log'); // Leer los datos actuales del localStorage
     if (!localStorageData) {
-      console.error("No se encontró el item 'chaski-log' en el localStorage.");
+      console.error("No se encontró el item 'user-log' en el localStorage.");
       return;
     }
 
@@ -55,7 +55,7 @@ const Profile = () => {
     // Actualizar solo el valor de logo
     parsedData.logo = bankData?.logo;
     // Guardar los datos actualizados nuevamente en el localStorage
-    localStorage.setItem('chaski-log', JSON.stringify(parsedData));
+    localStorage.setItem('user-log', JSON.stringify(parsedData));
   };
 
   const handleCancelBtn = (e: React.MouseEvent<HTMLButtonElement>) => {

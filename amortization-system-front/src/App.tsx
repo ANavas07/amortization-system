@@ -6,8 +6,8 @@ import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import CreditTypes from './pages/Dashboard/creditTypes';
-import Profile from './pages/banks';
-import Settings from './pages/Settings';
+import Settings from './pages/banks';
+import Profile from './pages/Settings';
 import DefaultLayout from './layout/DefaultLayout';
 import LoanSettings from './pages/loansSettings';
 import { Toaster } from 'react-hot-toast';
@@ -45,7 +45,7 @@ function App() {
               element={
                 authUser ? <Navigate to='/' /> :
                   <>
-                    <PageTitle title="Signin | DevChickenBros" />
+                    <PageTitle title="Sign In | DevChickenBros" />
                     <SignIn />
                   </>
               }
@@ -60,7 +60,7 @@ function App() {
               path='/'
               element={
                 <>
-                  <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
+                  <PageTitle title="CreditTypes | DevChickenBros" />
                   <CreditTypes />
                 </>
               }
@@ -69,29 +69,29 @@ function App() {
               path='/investments'
               element={
                   <>
-                    <PageTitle title="CreditTypes Dashboard | DevChickenBros" />
+                    <PageTitle title="Investments | DevChickenBros" />
                     <Investments />
                   </>
               }
             />
             <Route
-              path="/profile"
+              path="/settings"
               element={
                 <ProtectedRoute requiredRole={['A']}>
                   <>
-                    <PageTitle title="Cooperativa | DevChickenBros" />
-                    <Profile />
+                    <PageTitle title="Settings | DevChickenBros" />
+                    <Settings />
                   </>
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/settings"
+              path="/profile"
               element={
                 <ProtectedRoute>
                   <>
-                    <PageTitle title="Settings | DevChickenBros" />
-                    <Settings />
+                    <PageTitle title="Profile | DevChickenBros" />
+                    <Profile />
                   </>
                 </ProtectedRoute>
               }
@@ -101,7 +101,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={['A']}>
                   <>
-                    <PageTitle title="Signin | DevChickenBros" />
+                    <PageTitle title="Sign Up | DevChickenBros" />
                     <SignUp />
                   </>
                 </ProtectedRoute>
@@ -112,7 +112,7 @@ function App() {
               element={
                 <ProtectedRoute requiredRole={['A']}>
                   <>
-                    <PageTitle title="Signin | DevChickenBros" />
+                    <PageTitle title="Loan Settings | DevChickenBros" />
                     <LoanSettings />
                   </>
                 </ProtectedRoute>

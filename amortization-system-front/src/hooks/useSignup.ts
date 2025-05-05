@@ -25,7 +25,7 @@ export default function useSignup() {
             if (data.error) {
                 throw new Error(data.error);
             }
-            localStorage.setItem('chaski-log', JSON.stringify(data));
+            localStorage.setItem('user-log', JSON.stringify(data));
             setAuthUser(data);
         } catch (error) {
             toast.error(verifyError(error));

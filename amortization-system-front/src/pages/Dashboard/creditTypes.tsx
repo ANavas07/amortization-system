@@ -268,7 +268,7 @@ const CreditTypes: React.FC = () => {
         </select>
       </div>
 
-      <div className="flex flex-col md:flex-row border-stroke bg-transparent rounded-lg shadow-md max-w-6xl mx-auto mt-8">
+      <div className="flex flex-col md:flex-row border-stroke bg-transparent rounded-lg shadow-md max-w-6xl mx-auto mt-8 dark:bg-boxdark">
         {/* Left Column - Input Form */}
         <div className="w-full md:w-1/2 p-6 border-stroke bg-transparent rounded-l-lg text-black dark:text-white">
 

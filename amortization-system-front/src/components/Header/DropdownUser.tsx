@@ -36,7 +36,7 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {authUser.full_name}
+            {authUser.fullName}
           </span>
           <span className="block text-xs">
             {authUser.dni}
@@ -79,16 +79,17 @@ const DropdownUser = () => {
                 Mi perfil
               </Link>
             </li>
-            <li>
-              <Link
-                to="/profile"
-                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-              >
-                <IoBusinessSharp />
-
-                Ajustes Cooperativa
-              </Link>
-            </li>
+            {authUser.role !== 'B' && (
+              <li>
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                >
+                  <IoBusinessSharp />
+                  Ajustes Cooperativa
+                </Link>
+              </li>
+            )}
           </ul>
           {!loading ? (
             <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"

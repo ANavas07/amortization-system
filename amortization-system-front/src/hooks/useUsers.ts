@@ -8,10 +8,10 @@ export default function useUsers() {
   const [loading, setLoading] = useState(false);
   const [dataListUsers, setDataListUsers] = useState<UserT[]>([]);
 
-  const getDrivers = async () => {
+  const getUsers = async () => {
     setLoading(true);
     try {
-      const res: Response = await fetch(`${API_BASE_URL}users/drivers`, {
+      const res: Response = await fetch(`${API_BASE_URL}users/`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -36,16 +36,16 @@ export default function useUsers() {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-  
+
       const result = await res.json(); // Extraer la respuesta completa
-  
+
       if (!res.ok) {
         if (res.status === 404) {
           return null; // Usuario no encontrado
         }
         throw new Error(result.json.error || "Failed to fetch user data.");
       }
-  
+
       return result.json; // Devolver los datos reales del usuario
     } catch (error) {
       toast.error("Failed to fetch user data.");
@@ -54,8 +54,8 @@ export default function useUsers() {
       setLoading(false);
     }
   };
-  
-  
+
+
 
 
   const updateUsers = async (dni: string, updatedData: Partial<UserT>) => {
@@ -65,19 +65,19 @@ export default function useUsers() {
         dni,
         ...updatedData, // Incluye los datos proporcionados
       };
-    
-      const res: Response = await fetch(`${API_BASE_URL}users/update`, {
+
+      const res: Response = await fetch(`${API_BASE_URL}users/updateUser`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(body),
       });
-  
+
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Failed to update user.");
       }
-  
+
       // Muestra un mensaje de éxito
       toast.success("User updated successfully");
       return data; // Devuelve la respuesta de la API
@@ -88,9 +88,9 @@ export default function useUsers() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
-    getDrivers().then((data) => {
+    getUsers().then((data) => {
       if (data) {
         setDataListUsers(data); // Set the list to the state
       }
@@ -100,7 +100,7 @@ export default function useUsers() {
   return {
     loading,
     dataListUsers,
-    getDrivers,
+    getUsers,
     updateUsers,
     getUsersByDni
   };
