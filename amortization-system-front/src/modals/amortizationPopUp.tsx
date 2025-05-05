@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import useBank from '../hooks/useBank';
 import { IMAGE_URL } from '../helpers/Constants';
+import { useAuthContext } from '../context/AuthContext';
 
 (window as any).jsPDF = jsPDF;
 (window as any).autoTable = autoTable;
@@ -18,9 +19,10 @@ interface AmortizationPopupProps {
   loanData: tableAmortizationDataT[];
 }
 
+
 const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPopupProps) => {
   if (!isOpen) return null;
-
+  const { authUser } = useAuthContext();
   const tableRef = useRef<any>(null);
   const { getBanks } = useBank();
 
@@ -80,8 +82,20 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
 
     // Nombre del banco
     doc.setFontSize(16);
-    doc.text(bankName || 'Nombre del Banco', 105, 20, { align: 'center' });
-
+    doc.setTextColor(41, 128, 185); // azul oscuro
+    
+    if (authUser?.fullName) {
+      // Banco a la izquierda, Usuario a la derecha
+      doc.text(bankName || 'Nombre del Banco', 10, 20, { align: 'left' });
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0); // texto negro para el usuario
+      doc.text(`Usuario: ${authUser.fullName}`, 200, 20, { align: 'right' });
+    } else {
+      // Solo banco centrado
+      doc.text(bankName || 'Nombre del Banco', 105, 20, { align: 'center' });
+    }
+    
+    
     // Tabla
     autoTable(doc, {
       startY: 45,
