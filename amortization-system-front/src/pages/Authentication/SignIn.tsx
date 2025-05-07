@@ -7,6 +7,7 @@ import useSignup from '../../hooks/useSignup';
 import { CiMail } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const initialStateLogin: UserSignUpT = {
   email: '',
@@ -18,6 +19,7 @@ const SignIn: React.FC = () => {
 
   const [inputLogin, setInputLogin] = useState<UserSignUpT>(initialStateLogin);
   const { loading, login } = useSignup();
+  const navigate = useNavigate();
 
   //e evento automatico cuando cambia el input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,6 +126,14 @@ const SignIn: React.FC = () => {
 
                   </div>
                 </form>
+                <div className="text-center mt-4">
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  className="inline-block text-sm text-primary hover:underline">
+                  ← Regresar al Simulador
+                </button>
+              </div>
               </div>
             </div>
           </div>
