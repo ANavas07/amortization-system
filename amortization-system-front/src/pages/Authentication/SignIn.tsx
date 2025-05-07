@@ -8,6 +8,9 @@ import { CiMail } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import useBank from '../../hooks/useBank';
+import { useEffect } from 'react';
+import { IMAGE_URL } from '../../helpers/Constants'; // ajusta la ruta si es diferente
 
 const initialStateLogin: UserSignUpT = {
   email: '',
@@ -16,6 +19,40 @@ const initialStateLogin: UserSignUpT = {
 }
 
 const SignIn: React.FC = () => {
+
+  const { getBanks } = useBank();
+
+  const [logoUrl, setLogoUrl] = useState<string>('');
+  const [bankName, setBankName] = useState<string>('Nombre del Banco');
+
+  useEffect(() => {
+    const localStorageData = localStorage.getItem('chaski-log');
+
+    if (localStorageData) {
+      const parsed = JSON.parse(localStorageData);
+      if (parsed.logo) {
+        setLogoUrl(`${IMAGE_URL}${parsed.logo}`);
+      }
+    }
+
+    // Cargar nombre del banco desde la API
+    const fetchBankName = async () => {
+      try {
+        const res = await getBanks();
+        const bank = res.msg?.[0];
+        if (bank?.name) {
+          setBankName(bank.name);
+        }
+      } catch (err) {
+        console.error('Error cargando nombre del banco:', err);
+        setBankName('Nombre del Banco');
+      }
+    };
+
+    fetchBankName();
+  }, []);
+  console.log(bankName);
+
 
   const [inputLogin, setInputLogin] = useState<UserSignUpT>(initialStateLogin);
   const { loading, login } = useSignup();
@@ -41,19 +78,26 @@ const SignIn: React.FC = () => {
 
       <div className="flex h-screen items-center justify-center dark:bg-boxdark">
         <div className=" rounded-lg shadow-lg p-6 dark:border-strokedark dark:bg-boxdark w-[90%] my-auto">
-          <div className="flex flex-wrap items-center">
+        <div className="flex flex-wrap items-center">
             <div className="hidden w-full xl:block xl:w-1/2">
-              <div className="py-10 px-12 text-center">
-                <img className='dark:hidden' src={BrandLogoBlack} alt="Logo" />
-                <img className='hidden dark:block' src={BrandLogoWhite} alt="Logo" />
-              </div>
+            <div className="py-10 px-12 flex items-center justify-center h-full">
+              {logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt="Logo del banco"
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <>
+                  </>
+                )}
             </div>
-
-            <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+            </div>
+           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
               <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
                 <span className="mb-1.5 block font-medium">Ingreso</span>
                 <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                  DevChickenBros
+                  {bankName}
                 </h2>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">
