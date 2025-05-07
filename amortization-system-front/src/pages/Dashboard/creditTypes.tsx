@@ -209,7 +209,10 @@ const CreditTypes: React.FC = () => {
   };
 
   const amortizationSystemHandler = (amortizationData: amortizationT) => {
-    inpControls(amortizationData);
+    if(!inpControls(amortizationData)){
+      return;
+    };
+
     if (amortizationSystem === 'frances') {
       return getAmortizationFrenchRate(amortizationData);
     } else if (amortizationSystem === 'aleman') {
@@ -221,10 +224,17 @@ const CreditTypes: React.FC = () => {
   };
 
   const inpControls = (amortizationData: amortizationT) => {
+
+    if(!amortizationData.loanAmount || !amortizationData.paymentTime) {
+      toast.error('Por favor, completa todos los campos requeridos.');
+      return false;
+    }
+
     if (error || errorG) {
       toast.error('Por favor, corrige los errores antes de continuar.');
       return false;
     }
+
     const calculatedPrice = (amortizationData.priceGoods || 0) * 0.8;
     if (opCreditType.includes('hipotecario')) {
       if (loanAmount > calculatedPrice) {
@@ -233,7 +243,10 @@ const CreditTypes: React.FC = () => {
       } else {
         return true;
       }
-    }
+    };
+
+    return true;
+
   };
 
   const handleLoanAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {

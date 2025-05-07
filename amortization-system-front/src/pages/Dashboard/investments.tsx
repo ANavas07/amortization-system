@@ -100,7 +100,10 @@ const Investments: React.FC = () => {
     if (error || errorG) {
       toast.error('Por favor, corrige los errores antes de continuar.');
       return;
-    }
+    } else if (investAmount === 0 || time === 0) {
+      toast.error('Por favor, completa todos los campos.');
+      return;
+    };
 
     if (investmentRateTime !== null) {
       const result = getInvestmentSimulation(investAmount);
@@ -108,7 +111,7 @@ const Investments: React.FC = () => {
     } else {
       toast.error('Por favor, selecciona un sistema de amortización válido.');
       return;
-    }
+    };
 
   }
 

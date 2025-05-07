@@ -51,7 +51,6 @@ const SignIn: React.FC = () => {
 
     fetchBankName();
   }, []);
-  console.log(bankName);
 
 
   const [inputLogin, setInputLogin] = useState<UserSignUpT>(initialStateLogin);

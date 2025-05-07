@@ -119,7 +119,6 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
 
     doc.save('tabla_amortizacion.pdf');
   };
-  console.log("Intentando cargar logo desde:", logoUrl);
 
   const loadImage = (url: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
