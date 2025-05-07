@@ -45,13 +45,13 @@ export type bankT = {
 };
 
 export type loanSettingsT = {
-        interest: number;
-        insurance: number;
-        minAmount: number;
-        maxAmount: number;
-        maxCostGoods: number;
-        minCostGoods: number;
-}
+        interest: number | string;
+        insurance: number | string;
+        minAmount: number | string;
+        maxAmount: number | string;
+        maxCostGoods: number | string;
+        minCostGoods: number | string;
+};
 
 export type investmentResultT = {
     initialAmount: number,
@@ -59,7 +59,7 @@ export type investmentResultT = {
     yearlyRate: string,
     finalAmount: string,
     earnedInterest: string,
-}
+};
 
 
 

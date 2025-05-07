@@ -1,19 +1,19 @@
 {
   "consumo": {
-    "interest": 0.05,
+    "interest": 0.06,
     "insurance": 0.01,
-    "minAmount": 4000,
-    "maxAmount": 10000,
+    "minAmount": 1000,
+    "maxAmount": 15000,
     "maxCostGoods": 0,
     "minCostGoods": 0
   },
   "vehicular": {
-    "interest": 0.02,
-    "insurance": 0.01,
+    "interest": 0.1,
+    "insurance": 0.02,
     "minAmount": 1000,
-    "maxAmount": 10000,
-    "maxCostGoods": 0,
-    "minCostGoods": 0
+    "maxAmount": 35000,
+    "maxCostGoods": 35000,
+    "minCostGoods": 5000
   },
   "hipotecario": {
     "interest": 0.02,

@@ -49,16 +49,28 @@ const CreditTypes: React.FC = () => {
   const handleCreditTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     setOpCreditType(selectedValue);
-    
-    // Verificar si se seleccionó una opción válida (no la opción por defecto)
+
     if (selectedValue && selectedValue !== "¿Que tipo de credito necesitas?") {
       setIsCreditTypeSelected(true);
     } else {
       setIsCreditTypeSelected(false);
     }
-    
+
     selectedLoanSettings[selectedValue] && setLoanControlSettings(selectedLoanSettings[selectedValue]);
+    handleCleanInput();
   };
+
+  const handleCleanInput = () => {
+    setAmortizationSystem(null);
+    setLoanAmount(0);
+    setPaymentTimeText('');
+    setPaymentTime(12);
+    setTotalCapital(0);
+    setTotalInteres(0);
+    setTotalSeguro(0);
+    setTotalPagar(0);
+    setPrimeraCuota(null);
+  }
 
   const [loanAmount, setLoanAmount] = useState<number>(0);
   const [priceGoods, setPriceGoods] = useState<number>(0);
@@ -146,10 +158,9 @@ const CreditTypes: React.FC = () => {
     }
     setPrimeraCuota(tablaAmortizationSystem[0]);
 
-
     setDataLoan(tablaAmortizationSystem);
     return true;
-  }
+  };
 
   const getAmortizationGermanyRate = (amortizationData: amortizationT) => {
     const { loanAmount, paymentTime, interestRate } = amortizationData;
@@ -195,7 +206,7 @@ const CreditTypes: React.FC = () => {
 
     setDataLoan(tablaAmortizationSystem);
     return true;
-  }
+  };
 
   const amortizationSystemHandler = (amortizationData: amortizationT) => {
     inpControls(amortizationData);
@@ -207,47 +218,55 @@ const CreditTypes: React.FC = () => {
       toast.error('Por favor, selecciona un sistema de amortización válido.');
       return false;
     }
-  }
+  };
 
-  const inpControls= (amortizationData:amortizationT) =>{
-    if(error || errorG) {
+  const inpControls = (amortizationData: amortizationT) => {
+    if (error || errorG) {
       toast.error('Por favor, corrige los errores antes de continuar.');
       return false;
     }
-    const calculatedPrice = (amortizationData.priceGoods || 0) *0.8; 
-    if(opCreditType.includes('hipotecario')){
-      if(loanAmount > calculatedPrice){
+    const calculatedPrice = (amortizationData.priceGoods || 0) * 0.8;
+    if (opCreditType.includes('hipotecario')) {
+      if (loanAmount > calculatedPrice) {
         toast.error('El monto máximo a prestar es el 80% del costo de la vivienda.');
         return false;
-      }else{
+      } else {
         return true;
       }
     }
-  }
+  };
 
   const handleLoanAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
+    const valueString = e.target.value;
+    const isValidInput = /^[\d]*\.?[\d]{0,2}$/.test(valueString);
+    if (!isValidInput) return;
+    const value = parseFloat(valueString);
+
     setLoanAmount(value);
-    if (value < loanControlSettings.minAmount) {
+    if (value < Number(loanControlSettings.minAmount)) {
       setError(`El monto mínimo es ${loanControlSettings.minAmount}`);
-    } else if (value > loanControlSettings.maxAmount) {
+    } else if (value > Number(loanControlSettings.maxAmount)) {
       setError(`El monto máximo es ${loanControlSettings.maxAmount}`);
     } else {
       setError('');
     }
-  }
+  };
 
   const handleCostGoodsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
+    const valueString = e.target.value;
+    const isValidInput = /^[\d]*\.?[\d]{0,2}$/.test(valueString); // permite números con hasta 2 decimales
+    if (!isValidInput) return;
+    const value = Number(valueString);
+
     setLoanAmount(value);
-    if (value < loanControlSettings.minCostGoods) {
+    if (value < Number(loanControlSettings.minCostGoods)) {
       setErrorG(`El monto mínimo es ${loanControlSettings.minCostGoods}`);
-    } else if (value > loanControlSettings.maxCostGoods) {
+    } else if (value > Number(loanControlSettings.maxCostGoods)) {
       setErrorG(`El monto máximo es ${loanControlSettings.maxCostGoods}`);
     } else {
       setErrorG('');
     }
-  }
+  };
 
 
   return (
@@ -274,23 +293,24 @@ const CreditTypes: React.FC = () => {
 
           {opCreditType.includes('hipotecario') && (
             <div className="mb-6">
-              <label htmlFor="loanAmount" className="block text-sm font-medium  mb-2">
+              <label htmlFor="priceGoods" className="block text-sm font-medium  mb-2">
                 ¿Cual es el costo de la vivienda?
               </label>
               <input
-                type="number"
+                type="text"
                 id="priceGoods"
                 className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleCostGoodsChange}
                 disabled={!isCreditTypeSelected}
+                value={priceGoods.toString()}
               />
               <p className="text-xs text-gray-500 mt-1">Min. {loanControlSettings.minCostGoods}</p>
               <p className="text-xs text-gray-500 mt-1">Max. {loanControlSettings.maxCostGoods}</p>
               {errorG && (
-              <p className="text-red-500 text-sm mt-1">
-                ⚠ {errorG}
-              </p>
-            )}
+                <p className="text-red-500 text-sm mt-1">
+                  ⚠ {errorG}
+                </p>
+              )}
             </div>
           )}
 
@@ -299,6 +319,7 @@ const CreditTypes: React.FC = () => {
               ¿Cuánto dinero necesitas que te prestemos?
             </label>
             <input
+              value={loanAmount.toString()}
               type="number"
               id="loanAmount"
               className="w-full p-3 border bg-transparent rounded focus:ring-blue-500 focus:border-blue-500"
@@ -321,7 +342,8 @@ const CreditTypes: React.FC = () => {
             <div className="relative">
 
               <select
-                defaultValue=""
+                value={paymentTime}
+                // defaultValue="Selecciona el tiempo"
                 onChange={(e) => {
                   setPaymentTime(Number(e.target.value));
                   setPaymentTimeText(e.target.options[e.target.selectedIndex].text);
@@ -376,7 +398,7 @@ const CreditTypes: React.FC = () => {
                 loanAmount,
                 priceGoods,
                 paymentTime,
-                interestRate: loanControlSettings.interest // o podrías hacerlo variable también
+                interestRate: Number(loanControlSettings.interest) // o podrías hacerlo variable también
               })
             }
             disabled={!isCreditTypeSelected}
@@ -415,7 +437,7 @@ const CreditTypes: React.FC = () => {
           <div className="text-center mb-4">
             <p className="text-4xl font-bold "></p>
             <p className="text-sm mt-2">Durante <span className="font-medium">{paymentTimeText}</span></p>
-            <p className="text-sm">Con una tasa de interés referencial <span className="font-medium">{(loanControlSettings.interest * 100).toFixed(2)}%</span></p>
+            <p className="text-sm">Con una tasa de interés referencial <span className="font-medium">{(Number(loanControlSettings.interest) * 100).toFixed(2)}%</span></p>
           </div>
 
           <div className="bg-transparent rounded-lg p-4 mb-4 border border-stroke">
@@ -444,7 +466,7 @@ const CreditTypes: React.FC = () => {
             *Valores referenciales, no son considerados como una oferta formal de préstamo. La oferta definitiva está sujeta al cumplimiento de las condiciones y políticas referentes a capacidad de pago.
           </p>
 
-          <button 
+          <button
             className={`text-blue-600 hover:text-blue-800 text-center mb-100 ${!isCreditTypeSelected || dataLoan.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={() => isCreditTypeSelected && dataLoan.length > 0 && openModal()}
             disabled={!isCreditTypeSelected || dataLoan.length === 0}

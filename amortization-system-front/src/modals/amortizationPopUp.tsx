@@ -30,7 +30,7 @@ const AmortizationPopup = ({ title, isOpen, onClose, loanData }: AmortizationPop
   const [bankName, setBankName] = useState<string>('Nombre del Banco');
 
   useEffect(() => {
-    const localStorageData = localStorage.getItem('chaski-log');
+    const localStorageData = localStorage.getItem('user-log');
 
     if (localStorageData) {
       const parsed = JSON.parse(localStorageData);

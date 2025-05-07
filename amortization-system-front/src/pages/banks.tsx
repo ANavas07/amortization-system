@@ -5,7 +5,6 @@ import { IoCameraOutline } from "react-icons/io5";
 import { useEffect, useState } from 'react';
 import { IMAGE_URL } from '../helpers/Constants';
 import { bankT } from '../types';
-import { FaRegMap } from 'react-icons/fa';
 import useBank from '../hooks/useBank';
 
 const initialData: bankT = {
@@ -140,7 +139,7 @@ const Profile = () => {
             </div>
             <div className="mt-4">
               <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-                {bankInputs.name || 'Banco DevChickenBros'}
+                {bankInputs?.name || 'Banco DevChickenBros'}
               </h3>
               <div className="w-full pt-4">
                 <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row ">
@@ -157,7 +156,7 @@ const Profile = () => {
                         type="text"
                         name="name"
                         id="name"
-                        value={bankInputs.name ?? ''}
+                        value={bankInputs?.name ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -176,7 +175,7 @@ const Profile = () => {
                         type="text"
                         name="address"
                         id="address"
-                        value={bankInputs.address ?? ''}
+                        value={bankInputs?.address ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -194,7 +193,7 @@ const Profile = () => {
                         type="text"
                         name="phone"
                         id="phone"
-                        value={bankInputs.phone ?? ''}
+                        value={bankInputs?.phone ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -212,7 +211,7 @@ const Profile = () => {
                         type="text"
                         name="email"
                         id="email"
-                        value={bankInputs.email ?? ''}
+                        value={bankInputs?.email ?? ''}
                         onChange={handleChange}
                       />
                     </div>
@@ -231,7 +230,7 @@ const Profile = () => {
                       className="w-full rounded border border-stroke bg-gray py-3 pl-1 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       name="slogan"
                       id="slogan"
-                      value={bankInputs.slogan ?? ''}
+                      value={bankInputs?.slogan ?? ''}
                       rows={4}
                       onChange={handleChange}
                     />

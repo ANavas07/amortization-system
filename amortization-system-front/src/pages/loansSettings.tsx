@@ -12,7 +12,7 @@ const loanSettings: loanSettingsT = {
     maxAmount: 0,
     maxCostGoods: 0,
     minCostGoods: 0,
-}
+};
 
 const LoanSettings: React.FC = () => {
 
@@ -20,6 +20,7 @@ const LoanSettings: React.FC = () => {
     const { getLoanSettings, loading, updateLoanSettings } = useLoanSettings();
     const [selectedLoanSettings, setSelectedLoanSettings] = useState<Record<string, any>>({});
     const [selectedKeyLoanSettings, setSelectedKeyLoanSettings] = useState<string>("null");
+    const [savedChanges, setSavedChanges] = useState(false);
 
     const [inputloanSettings, setInputloanSettings] =
         useState<loanSettingsT>(loanSettings);
@@ -32,12 +33,16 @@ const LoanSettings: React.FC = () => {
         }
 
         loadSettings();
-    }, [])
+    }, [savedChanges])
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     ) => {
-        const {id, value} = e.target;
+        const { id, value } = e.target;
+        const isValidInput = /^[\d]*\.?[\d]{0,2}$/.test(value);
+        if (!isValidInput) return;
+
+
         setInputloanSettings({
             ...inputloanSettings,
             [id]: value === '' ? 0 : parseFloat(value),
@@ -51,10 +56,29 @@ const LoanSettings: React.FC = () => {
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const sanitizedData = sanitizeLoanSettings(inputloanSettings);
+
         const updateLoanSettingsData = {
-            [selectedKeyLoanSettings]: inputloanSettings,
+            [selectedKeyLoanSettings]: sanitizedData,
         };
         await updateLoanSettings(updateLoanSettingsData);
+        setSavedChanges(!savedChanges);
+    };
+
+    const sanitizeLoanSettings = (
+        values: Record<string, string | number>
+    ): Record<string, number> => {
+        const result: Record<string, number> = {};
+
+        for (const key in values) {
+            if (values.hasOwnProperty(key)) {
+                const value = values[key];
+                result[key] = typeof value === 'number' ? value : parseFloat(value) || 0;
+            }
+        }
+
+        return result;
     };
 
     return (
@@ -85,11 +109,11 @@ const LoanSettings: React.FC = () => {
                             </label>
                             <div className="relative">
                                 <input
-                                    type="text"
+                                    type="number"
+                                    step="0.01"
                                     maxLength={10}
-                                    placeholder="12.5%"
                                     id="interest"
-                                    value={inputloanSettings.interest}
+                                    value={inputloanSettings.interest.toString()}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />
@@ -105,11 +129,12 @@ const LoanSettings: React.FC = () => {
                             </label>
                             <div className="relative">
                                 <input
-                                    type="text"
+                                    type="number"
+                                    step="0.01"
                                     maxLength={20}
                                     placeholder="2%"
                                     id="insurance"
-                                    value={inputloanSettings.insurance}
+                                    value={inputloanSettings.insurance.toString()}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />
@@ -126,11 +151,10 @@ const LoanSettings: React.FC = () => {
                             </label>
                             <div className="relative">
                                 <input
-                                    type="text"
+                                    type="number"
                                     maxLength={20}
-                                    placeholder="1000"
                                     id="minAmount"
-                                    value={inputloanSettings.minAmount}
+                                    value={inputloanSettings.minAmount.toString()}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />
@@ -146,11 +170,10 @@ const LoanSettings: React.FC = () => {
                             </label>
                             <div className="relative">
                                 <input
-                                    type="text"
-                                    placeholder="100000"
+                                    type="number"
                                     maxLength={20}
                                     id="maxAmount"
-                                    value={inputloanSettings.maxAmount}
+                                    value={inputloanSettings.maxAmount.toString()}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />
@@ -168,11 +191,10 @@ const LoanSettings: React.FC = () => {
                             </label>
                             <div className="relative">
                                 <input
-                                    type="text"
-                                    placeholder="100000"
+                                    type="number"
                                     maxLength={20}
-                                    id="maxCostGoods"
-                                    value={inputloanSettings.minCostGoods}
+                                    id="minCostGoods"
+                                    value={inputloanSettings.minCostGoods.toString()}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />
@@ -188,11 +210,10 @@ const LoanSettings: React.FC = () => {
                             </label>
                             <div className="relative">
                                 <input
-                                    type="text"
-                                    placeholder="100000"
+                                    type="number"
                                     maxLength={20}
                                     id="maxCostGoods"
-                                    value={inputloanSettings.maxCostGoods}
+                                    value={inputloanSettings.maxCostGoods.toString()}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />
