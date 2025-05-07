@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../../context/AuthContext';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import AmortizationPopup from '../../modals/amortizationPopUp';
-import { amortizationT, investmentResultT, loanSettingsT, tableAmortizationDataT } from '../../types';
+import {  investmentResultT} from '../../types';
 import useLoanSettings from '../../hooks/useLoanSettings';
 import toast from 'react-hot-toast';
 import rates from '../../utils/investmentsRates.json';
 
 const Investments: React.FC = () => {
 
-  const [opCreditType, setOpCreditType] = useState('');
   const [investmentRateTime, setInvestmentRateTime] = useState<'month' | 'days' | null>(null);
-  const [dataLoan, setDataLoan] = useState<tableAmortizationDataT[]>([]);
   //Para manejo del interes
   const [selectedLoanSettings, setSelectedLoanSettings] = useState<Record<string, any>>({});
   const { getLoanSettings } = useLoanSettings();
 
-  const [loanControlSettings, setLoanControlSettings] = useState<loanSettingsT>({
-    interest: 0,
-    minAmount: 0,
-    maxAmount: 0,
-    insurance: 0,
-    maxCostGoods: 0,
-    minCostGoods: 0,
-  });
 
   const [investmentFinalData, setInvestmentFinalData] = useState<investmentResultT | null>(null);
   const [error, setError] = useState<string>('');
@@ -44,16 +33,6 @@ const Investments: React.FC = () => {
 
   const [investAmount, setInvestAmount] = useState<number>(0);
   const [time, setTime] = useState<number>(0);
-
-
-  const [priceGoods, setPriceGoods] = useState<number>(0);
-  const [paymentTime, setPaymentTime] = useState<number>(12); // valor por defecto
-  const [paymentTimeText, setPaymentTimeText] = useState<string>('');
-  const [totalCapital, setTotalCapital] = useState<number>(0);
-  const [totalInteres, setTotalInteres] = useState<number>(0);
-  const [totalSeguro, setTotalSeguro] = useState<number>(0);
-  const [totalPagar, setTotalPagar] = useState<number>(0);
-  const [primeraCuota, setPrimeraCuota] = useState<tableAmortizationDataT | null>(null);
 
 
   const getInvestmentSimulation = (invest: number, capitalization: boolean = false) => {

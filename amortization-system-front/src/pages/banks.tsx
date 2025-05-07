@@ -43,16 +43,16 @@ const Profile = () => {
   }, [btnCancelPressed]);
 
   const changeLogoValueLocalStorage = async () => {
+    const bankData = await getBanks(); // Obtener los datos actualizados del banco
     const localStorageData = localStorage.getItem('user-log'); // Leer los datos actuales del localStorage
     if (!localStorageData) {
       console.error("No se encontró el item 'user-log' en el localStorage.");
       return;
-    }
-
+    };
     // Parsear los datos existentes
     const parsedData = JSON.parse(localStorageData);
     // Actualizar solo el valor de logo
-    parsedData.logo = bankData?.logo;
+    parsedData.logo = bankData.msg[0].logo;
     // Guardar los datos actualizados nuevamente en el localStorage
     localStorage.setItem('user-log', JSON.stringify(parsedData));
   };
